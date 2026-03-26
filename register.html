@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+
+<style>
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#8b0000,#ffcccb);
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+margin:0;
+padding:10px;
+}
+
+.register-box{
+background:white;
+padding:25px;
+border-radius:12px;
+width:100%;
+max-width:380px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h2{
+text-align:center;
+margin-bottom:15px;
+}
+
+input, select{
+width:100%;
+padding:12px;
+margin:8px 0;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:16px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+background:#8b0000;
+color:white;
+font-size:16px;
+}
+
+button:hover{
+background:#600000;
+}
+
+.message{
+margin-top:12px;
+text-align:center;
+font-weight:bold;
+}
+
+.popup-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.popup-box{
+background:white;
+padding:25px;
+border-radius:12px;
+text-align:center;
+max-width:300px;
+width:90%;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="register-box">
+
+<h2>Register</h2>
+
+<input type="tel" id="phone" placeholder="Phone Number">
+<input type="text" id="shop" placeholder="Shop Name (CAPITAL)">
+<input type="text" id="place" placeholder="Place">
+
+<select id="district">
+<option value="">Select District</option>
+<option>Kozhikode</option>
+<option>Malappuram</option>
+<option>Kannur</option>
+<option>Ernakulam</option>
+</select>
+
+<select id="state">
+<option value="">Select State</option>
+<option>Kerala</option>
+<option>Tamil Nadu</option>
+<option>Karnataka</option>
+</select>
+
+<h3>Products</h3>
+<label><input type="checkbox" value="916 Gold" class="product"> 916 Gold</label><br>
+<label><input type="checkbox" value="22K Gold" class="product"> 22K Gold</label><br>
+<label><input type="checkbox" value="Silver" class="product"> Silver</label>
+
+<h3>Upload Logo</h3>
+<input type="file" id="logo" accept="image/*">
+
+<h3>Upload Footer Design</h3>
+<input type="file" id="footer" accept="image/*">
+
+<button onclick="register()" id="registerBtn">Register</button>
+
+<div class="message" id="message"></div>
+
+<div id="successPopup" class="popup-overlay">
+<div class="popup-box">
+<h3>Registration Successful</h3>
+<p>Your Code:</p>
+<h2 id="securityCode"></h2>
+<button onclick="goHome()">Go Home</button>
+</div>
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+apiKey: "YOUR_KEY",
+authDomain: "YOUR_DOMAIN",
+projectId: "YOUR_ID",
+storageBucket: "YOUR_BUCKET",
+messagingSenderId: "YOUR_MSG_ID",
+appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+window.register = async function(){
+
+const btn = document.getElementById("registerBtn");
+btn.innerText="Registering...";
+btn.disabled=true;
+
+const phone = document.getElementById("phone").value.trim();
+const shop = document.getElementById("shop").value.trim();
+const place = document.getElementById("place").value.trim();
+const district = document.getElementById("district").value;
+const state = document.getElementById("state").value;
+
+const logoFile = document.getElementById("logo").files[0];
+const footerFile = document.getElementById("footer").files[0];
+
+const productCheckboxes = document.querySelectorAll(".product");
+let products = [];
+
+productCheckboxes.forEach(cb=>{
+if(cb.checked) products.push(cb.value);
+});
+
+// validation
+if(!phone || !shop || !place || !district || !state || !logoFile || !footerFile){
+showMessage("Fill all fields","red");
+btn.disabled=false;
+btn.innerText="Register";
+return;
+}
+
+if(products.length===0){
+showMessage("Select products","red");
+btn.disabled=false;
+btn.innerText="Register";
+return;
+}
+
+try{
+
+const userRef = doc(db,"users",phone);
+const existing = await getDoc(userRef);
+
+if(existing.exists()){
+showMessage("Already registered","red");
+btn.disabled=false;
+btn.innerText="Register";
+return;
+}
+
+// upload logo
+const logoRef = ref(storage,"logos/"+phone);
+await uploadBytes(logoRef,logoFile);
+const logoURL = await getDownloadURL(logoRef);
+
+// upload footer
+const footerRef = ref(storage,"footers/"+phone);
+await uploadBytes(footerRef,footerFile);
+const footerURL = await getDownloadURL(footerRef);
+
+// generate code
+const code = Math.floor(100000 + Math.random()*900000);
+
+await setDoc(userRef,{
+phone, shop, place, district, state,
+products,
+logoURL,
+footerURL,
+code,
+createdAt: new Date()
+});
+
+localStorage.setItem("userPhone",phone);
+
+document.getElementById("securityCode").innerText = code;
+document.getElementById("successPopup").style.display="flex";
+
+}
+catch(err){
+console.log(err);
+showMessage("Error occurred","red");
+}
+
+btn.innerText="Register";
+btn.disabled=false;
+
+}
+
+window.goHome = function(){
+window.location.href="index.html";
+}
+
+function showMessage(text,color){
+const msg=document.getElementById("message");
+msg.innerText=text;
+msg.style.color=color;
+}
+
+</script>
+
+</body>
+</html>
