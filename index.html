@@ -1,123 +1,2014 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+
+<title>Gold Rate Poster Service</title>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jewellery Login</title>
 
 <style>
+
 body{
-  font-family: Arial;
-  background: linear-gradient(135deg,#b8860b,#ffd700);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  margin:0;
+font-family: Arial;
+background: linear-gradient(135deg,#b8860b,#ffd700);
+margin:0;
+padding:15px;
+display:flex;
+flex-direction:column;
+align-items:center;
 }
 
-.login-box{
-  background:white;
-  padding:30px;
-  border-radius:12px;
-  width:320px;
-  text-align:center;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+.card{
+background:white;
+width:100%;
+max-width:400px;
+border-radius:15px;
+padding:22px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+text-align:center;
+margin-bottom:40px;
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
+.logo{
+width:110px;
+height:110px;
+margin:auto;
+border-radius:50%;
+border:2px solid #ddd;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
 }
 
-button{
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border:none;
-  border-radius:6px;
-  font-weight:bold;
-  cursor:pointer;
+.logo img{
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
-.login-btn{
-  background:#b8860b;
-  color:white;
+h2{
+margin:10px 0 5px;
+font-size:20px;
 }
 
-.login-btn:hover{
-  background:#a07600;
+.info{
+font-size:13px;
+color:#444;
+margin:3px 0;
+word-break:break-word;
+}
+.status-box{
+width:100%;
+max-width:400px;
+border:5px solid #6b1d1d;
+margin-bottom:25px;
+font-weight:bold;
+text-align:center;
+overflow:hidden;
 }
 
-.register-btn{
-  background:#444;
-  color:white;
+.status-header{
+padding:15px;
+font-size:22px;
+color:white;
 }
 
-.register-btn:hover{
-  background:#222;
+.status-row{
+display:flex;
+justify-content:space-between;
+background:#0a6b3c;
+color:white;
+padding:12px 20px;
+font-size:20px;
+border-top:5px solid #6b1d1d;
+border-bottom:5px solid #6b1d1d;
 }
 
-.error{
-  color:red;
-  margin-top:10px;
+.status-plan{
+padding:15px;
+font-size:22px;
 }
+.status{
+margin-top:15px;
+font-weight:bold;
+font-size:15px;
+}
+
+.updated{
+color:green;
+}
+
+.not-updated{
+color:red;
+}
+
+.plan-active{
+color:green;
+}
+
+.plan-warning{
+color:orange;
+}
+
+.plan-expired{
+color:red;
+}
+
+/* Download button */
+
+.download-btn{
+width:100%;
+padding:18px;
+font-size:20px;
+font-weight:bold;
+border-radius:10px;
+background:#00590c;
+color:white;
+border:none;
+margin-top:35px;
+cursor:pointer;
+}
+
+.download-btn:hover{
+background:#026c04;
+}
+
+/* Edit button */
+
+.edit-btn{
+width:100%;
+padding:14px;
+background:#b8860b;
+color:white;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+margin-top:30px;
+font-size:16px;
+}
+
+/* Bottom buttons */
+
+.bottom-actions{
+display:flex;
+gap:15px;
+margin-top:40px;
+}
+
+.bottom-actions button{
+flex:1;
+padding:14px;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+font-size:15px;
+}
+
+.whatsapp-btn{
+background:#25D366;
+color:white;
+}
+
+.logout-btn{
+background:#cc0000;
+color:white;
+}
+
+/* Loading animation */
+
+.loading-btn{
+position:relative;
+pointer-events:none;
+opacity:0.8;
+}
+
+.loading-btn::after{
+content:"";
+width:18px;
+height:18px;
+border:3px solid white;
+border-top:3px solid transparent;
+border-radius:50%;
+position:absolute;
+right:15px;
+top:50%;
+transform:translateY(-50%);
+animation:spin 0.8s linear infinite;
+}
+
+@keyframes spin{
+0%{transform:translateY(-50%) rotate(0deg);}
+100%{transform:translateY(-50%) rotate(360deg);}
+}
+
+/* Full screen loader */
+
+#loadingScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.loader{
+width:40px;
+height:40px;
+border:4px solid #ddd;
+border-top:4px solid #b8860b;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-bottom:10px;
+}
+
+/* Footer */
+
+.site-footer{
+margin-top:30px;
+background:#111;
+color:#eee;
+padding:25px;
+border-radius:12px;
+max-width:400px;
+width:100%;
+font-size:14px;
+line-height:1.6;
+}
+
+.site-footer h3{
+margin-top:10px;
+color:#ffd700;
+font-size:16px;
+}
+.share-wrapper{
+margin-top:30px;
+display:flex;
+justify-content:center;
+}
+
+.share-circle{
+width:220px;
+height:220px;
+border-radius:50%;
+background:linear-gradient(135deg,#2ecc71,#27ae60);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+font-weight:bold;
+color:#000;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+position:relative;
+overflow:hidden;
+}
+
+/* CLICK EFFECT */
+.share-circle:active{
+transform:scale(0.95);
+}
+.status-row span{
+margin-right:10px;
+}
+/* LOADING ANIMATION */
+.share-loading{
+animation:pulse 1.2s infinite;
+}
+
+.share-loading::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+border-radius:50%;
+background:rgba(255,255,255,0.3);
+animation:ripple 1.5s infinite;
+}
+.share-disabled{
+background: #cc0000 !important;
+background-image: none !important;
+color: white;
+pointer-events: none;
+opacity: 1;
+}
+  
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.08);}
+100%{transform:scale(1);}
+}
+
+@keyframes ripple{
+0%{transform:scale(1);opacity:0.5;}
+100%{transform:scale(1.8);opacity:0;}
+}
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+/* Mobile optimization */
+
+@media(max-width:480px){
+
+.download-btn{
+font-size:22px;
+padding:22px;
+}
+
+.card{
+padding:20px;
+}
+
+.bottom-actions{
+gap:10px;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="login-box">
-  <h2>Login</h2>
-
-  <input type="text" id="phone" placeholder="Phone Number">
-  <input type="password" id="code" placeholder="Security Code">
-
-  <button class="login-btn" onclick="login()">Login</button>
-  <button class="register-btn" onclick="goRegister()">Register</button>
-
-  <div class="error" id="error"></div>
+<div id="loadingScreen">
+  <div class="loader"></div>
+  <p>Loading...</p>
 </div>
 
-<script>
+<div class="card">
 
-function login(){
-  const phone = document.getElementById("phone").value;
-  const code = document.getElementById("code").value;
+  <!-- LOGO -->
+  <div class="logo" id="logoBox">
+    No Logo
+  </div>
 
-  if(!phone || !code){
-    document.getElementById("error").innerText = "Please fill all fields";
-    return;
+  <!-- SHOP DETAILS -->
+  <h2 id="shopName">Shop Name</h2>
+
+  <div class="info" id="place"></div>
+  <div class="info" id="district"></div>
+  <div class="info" id="email"></div>
+  <div class="info" id="contact"></div>
+
+  <!-- STATUS BOX -->
+  <div id="statusBox" class="status-box">
+
+    <div id="statusHeader" class="status-header">
+      Checking...
+    </div>
+
+   <div class="status-row">
+  <span>Last Updated:</span>
+  <span id="statusDate">--</span>
+  <span id="statusTime">--</span>
+</div>
+    <div id="statusPlan" class="status-plan">
+      Checking plan...
+    </div>
+
+  </div>
+
+  <!-- SHARE BUTTON -->
+  <div class="share-wrapper">
+    <div id="shareBtn" class="share-circle">
+      Share
+    </div>
+  </div>
+
+</div>
+
+</body>
+
+<button class="edit-btn" onclick="location.href='edit.html'">
+Edit Details
+</button>
+
+<button id="rechargeBtn" onclick="location.href='recharge.html'" style="display:none;background:#444;margin-top:20px;color:white;padding:14px;border:none;border-radius:10px;width:100%;">
+Recharge Now
+</button>
+
+<div class="bottom-actions">
+
+<button class="whatsapp-btn" onclick="openWhatsApp()">
+💬 Chat
+</button>
+
+<button class="logout-btn" onclick="logoutUser()">
+Logout
+</button>
+
+</div>
+
+</div>
+
+<footer class="site-footer">
+
+<h3>About</h3>
+
+<p>
+Gold Poster Downloading System is an online tool designed for jewellery shops to quickly create and download professional gold rate posters.
+Users can generate high-quality A4 posters with today's gold rate, shop details and logo.
+This system helps jewellery businesses easily share daily gold rate updates on social media and WhatsApp.
+</p>
+
+<h3>Contact Us</h3>
+
+<p>
+Ph: 9656100346 (WhatsApp Only)<br>
+Email: muzellamedia@gmail.com
+</p>
+
+<h3>Corporate Office</h3>
+
+<p>
+AbcOne<br>
+NC Complex, Near Karassery Medicals<br>
+Mukkam, Kozhikode, Kerala 673602
+</p>
+
+</footer>
+
+ <script type="module">
+
+
+// =====================
+// GLOBAL
+// =====================
+// GLOBAL
+// =====================
+let shopName = "";
+let place = "";
+let district = "";
+let state = "";
+
+let products = []; // 916, 22k, silver
+
+let logoUrl = "";
+let footerUrl = "";
+
+// GOLD RATES
+let rate22k_1g = "";
+let rate22k_1p = "";
+let rate18k_1g = "";
+let rateSilver_1g = "";
+
+let rateDate = "";
+let rateTime = "";
+
+// UI control
+let lastTemplate = -1;
+let lastBg = -1;
+
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBxnjf4XDfnr4kj6mb-bR_wHW_3ZT0e9BU",
+  authDomain: "gold-5735f.firebaseapp.com",
+  projectId: "gold-5735f",
+  storageBucket: "gold-5735f.firebasestorage.app",
+  messagingSenderId: "5295731508",
+  appId: "1:5295731508:web:07d5430da5ebaaf6886b61"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const phone = localStorage.getItem("userPhone");
+
+if(!phone){
+  alert("Login required");
+  location.href="login.html";
+}
+
+
+// =====================
+// MAIN LOAD
+// =====================
+window.addEventListener("DOMContentLoaded", async function(){
+
+const shareBtn = document.getElementById("shareBtn");
+const planStatus = document.getElementById("planStatus");
+const rechargeBtn = document.getElementById("rechargeBtn");
+
+// =====================
+// SHARE BUTTON
+// =====================
+shareBtn.onclick = async function(){
+
+shareBtn.classList.add("share-loading");
+shareBtn.innerText = "";
+shareBtn.style.pointerEvents = "none";
+
+try{
+
+const SECRET = "Gold@Security";
+
+const res = await fetch(
+  API_URL + "?type=checkDownload&phone=" + userPhone + "&key=" + SECRET
+);
+
+const data = await res.json();
+
+if(data.status === "limit"){
+disableShareBtn("2 Poster Limit"); // 🔥 NO resetBtn
+return;
+}
+
+if(data.status === "expired"){
+disableShareBtn("Plan Expired");
+return;
+}
+
+generatePoster(true);
+
+}catch(err){
+alert("Network error");
+resetBtn();
+}
+
+
+}
+
+
+
+// =====================
+// INIT LOAD
+// =====================
+try {
+
+const SECRET = "Gold@Security";
+
+const res = await fetch(API_URL + "?type=init&phone=" + userPhone + "&key=" + SECRET);
+
+const data = await res.json();
+
+const user = data.user || {};
+const rates = data.rates || {};
+backgrounds = data.backgrounds || [];
+
+// =====================
+// USER DATA
+// =====================
+shopName = user.shop || "";
+logoUrl = user.logo || "";
+place = user.place || "";
+
+contacts = [
+user.contact1,
+user.contact2,
+user.contact3
+].filter(n=>n);
+
+// UI
+document.getElementById("shopName").innerText = shopName;
+document.getElementById("place").innerText = user.place || "";
+document.getElementById("district").innerText = user.district || "";
+document.getElementById("email").innerText = user.email || "";
+document.getElementById("contact").innerText = contacts.join(" | ");
+
+// =====================
+// LOGO
+// =====================
+if(user.logo){
+let fileId = "";
+
+if(user.logo.includes("id=")){
+fileId = user.logo.split("id=")[1];
+}
+else if(user.logo.includes("/d/")){
+fileId = user.logo.split("/d/")[1].split("/")[0];
+}
+
+let imgUrl = "https://lh3.googleusercontent.com/d/" + fileId;
+document.getElementById("logoBox").innerHTML = "<img src='"+imgUrl+"'>";
+logoUrl = imgUrl;
+}
+
+// =====================
+// RATES
+// =====================
+gold1Gram = rates.gold1gram || 0;
+gold1Pavan = gold1Gram * 8;
+
+let rawDate = rates.date || "";
+let rawTime = rates.time || "";
+rateTime = rawTime || "";
+
+gold1Gram = Number(gold1Gram).toLocaleString("en-IN");
+gold1Pavan = Number(gold1Pavan).toLocaleString("en-IN");
+
+if(rawDate){
+const d = new Date(rawDate);
+
+const day = String(d.getDate()).padStart(2,'0');
+const month = String(d.getMonth()+1).padStart(2,'0');
+const year = d.getFullYear();
+
+rateDate = `${day}-${month}-${year}`;
+}
+
+// =====================
+// RATE STATUS
+// =====================
+const today = new Date().toISOString().slice(0,10);
+const rateDateISO = rawDate ? new Date(rawDate).toISOString().slice(0,10) : "";
+
+const statusHeader = document.getElementById("statusHeader");
+const statusDate = document.getElementById("statusDate");
+const statusTime = document.getElementById("statusTime");
+const statusPlan = document.getElementById("statusPlan");
+
+if(rateDateISO === today){
+
+statusHeader.innerText = "Today's Gold Rate Updated";
+statusHeader.style.background = "#0a6b3c";
+
+statusDate.innerText = rawDate;
+statusTime.innerText = rateTime;
+
+}else{
+
+statusHeader.innerText = "Today's Gold Not Rate Updated";
+statusHeader.style.background = "#e60000";
+
+statusDate.innerText = rateDate || "--";
+statusTime.innerText = rateTime || "--";
+
+disableShareBtn("Rate Not Updated");
+
+}
+
+// =====================
+// PLAN STATUS
+// =====================
+const expiry = user.planExpiry ? new Date(user.planExpiry) : null;
+const todayDate = new Date();
+
+if(!expiry || todayDate > expiry){
+
+statusPlan.innerText = "Plan Expired";
+statusPlan.style.background = "#e60000";
+statusPlan.style.color = "yellow";
+
+disableShareBtn("Plan Expired");
+  document.getElementById("rechargeBtn").style.display = "block";
+
+
+}else{
+
+const diffTime = expiry - todayDate;
+const remainingDays = Math.ceil(diffTime / (1000*60*60*24));
+
+statusPlan.innerText = "Plan Active - " + remainingDays + " Days Remaining";
+statusPlan.style.background = "#0a6b3c";
+statusPlan.style.color = "yellow";
+
+document.getElementById("rechargeBtn").style.display = "none";
+
+}
+
+
+
+}catch(err){
+alert("Init load failed");
+}
+
+// =====================
+// REMOVE LOADING
+// =====================
+document.getElementById("loadingScreen").style.display = "none";
+
+});
+  // =====================
+ 
+function downloadPoster(share=false){
+
+const phone = userPhone;
+
+const SECRET = "Gold@Security";
+
+fetch(API_URL + "?type=checkDownload&phone=" + phone + "&key=" + SECRET)
+.then(res => res.json())
+.then(data => {
+
+if(data.status === "limit"){
+disableShareBtn("2 Poster Limit");
+return;
+}
+
+// continue download
+generatePoster(share);
+
+});
+
+}
+
+  // =====================
+  // DOWNLOAD
+  // =====================
+  function generatePoster(share=false){
+
+const btn = document.getElementById("shareBtn");
+
+// ✅ START animation
+btn.classList.add("share-loading");
+btn.innerText = "";
+btn.style.pointerEvents = "none";
+
+// background load wait
+if(backgrounds.length === 0){
+
+setTimeout(function(){
+generatePoster(share);
+},500);
+
+return;
+
+}
+
+let bgIndex;
+
+do{
+bgIndex = Math.floor(Math.random() * backgrounds.length);
+}while(bgIndex === lastBg);
+
+lastBg = bgIndex;
+
+createPoster(backgrounds[bgIndex], share);
+
+}
+
+
+  // =====================
+  // CREATE POSTER
+  // =====================
+  function createPoster(bgUrl, share){
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = 2480;
+  canvas.height = 3508;
+
+  const bg = new Image();
+  bg.crossOrigin = "anonymous";   // MUST
+  bg.src = bgUrl;
+
+  bg.onload = function(){
+
+    ctx.drawImage(bg,0,0,2480,3508);
+
+    const templateList = [
+template1,
+template2,
+template3,
+template4,
+template5,
+template6,
+template7,
+template8
+];
+    let index;
+
+do{
+index = Math.floor(Math.random() * templateList.length);
+}while(index === lastTemplate);
+
+lastTemplate = index;
+
+    templateList[index](ctx, canvas, share);
+
+  };
+
+  bg.onerror = function(){
+    alert("Background failed to load");
+  };
+}
+
+  function template1(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+
+drawTemplate1(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate1(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate1(ctx,canvas,share){
+
+
+
+
+// TITLE + DATE BOX (TOP LEFT)
+
+// YELLOW TRANSPARENT BACKGROUND
+ctx.fillStyle="rgba(255,215,0,0.25)";
+roundRect(ctx,80,120,1050,200,30,true,false);
+
+// WHITE BORDER
+ctx.strokeStyle="white";
+ctx.lineWidth=8;
+roundRect(ctx,80,120,1050,200,30,false,true);
+
+
+// TITLE
+ctx.textAlign="left";
+ctx.fillStyle="#FFFFFF";
+ctx.font="bold 60px Arial";
+ctx.fillText("TODAY’S GOLD RATE",120,210);
+
+ // DATE
+ctx.fillStyle="#FFFFFF";
+ctx.font="bold 100px Arial";
+ctx.fillText(rateDate,120,300);
+
+
+ctx.textAlign="center";
+
+
+// ---------- 1 GRAM ----------
+
+ctx.fillStyle="#3ca26a";
+roundRect(ctx,980,1650,520,140,25,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 120px Arial";
+ctx.fillText("1 Pavan",1240,1750);
+
+
+
+// 1 PAVAN RATE BOX
+
+ctx.fillStyle="#1f2d2f";
+roundRect(ctx,650,1820,1180,300,40,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 240px Arial";
+ctx.fillText("₹ "+gold1Pavan,1240,2050);
+
+
+
+// 1 GRAM LABEL
+
+ctx.fillStyle="#3ca26a";
+roundRect(ctx,980,2160,520,140,25,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 120px Arial";
+ctx.fillText("1 Gram",1240,2260);
+
+
+
+// 1 GRAM RATE BOX
+
+ctx.fillStyle="#1f2d2f";
+roundRect(ctx,820,2330,840,230,40,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 180px Arial";
+ctx.fillText("₹ "+gold1Gram,1240,2490);
+
+ 
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+}
+
+
+function template2(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+
+drawTemplate2(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate2(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate2(ctx,canvas,share){
+
+
+
+
+// TITLE + DATE BOX (TOP LEFT)
+
+// YELLOW TRANSPARENT BACKGROUND
+ctx.fillStyle="rgba(255,215,0,0.25)";
+roundRect(ctx,80,120,1050,200,30,true,false);
+
+// WHITE BORDER
+ctx.strokeStyle="white";
+ctx.lineWidth=8;
+roundRect(ctx,80,120,1050,200,30,false,true);
+
+
+// TITLE
+ctx.textAlign="left";
+ctx.fillStyle="#FFFFFF";
+ctx.font="bold 60px Arial";
+ctx.fillText("TODAY’S GOLD RATE",120,210);
+
+ // DATE
+ctx.fillStyle="#FFFFFF";
+ctx.font="bold 100px Arial";
+ctx.fillText(rateDate,120,300);
+
+
+ctx.textAlign="center";
+
+
+// ---------- 1 GRAM ----------
+
+// 3. GOLD 1 GRAM BOX
+    ctx.fillStyle = "rgba(184, 134, 11, 0.9)"; // Gold color
+    ctx.fillRect(400, 1600, 1680, 400);
+    ctx.fillStyle = "white";
+    ctx.font = "100px Arial";
+    ctx.fillText("GOLD 1 GRAM", 1240, 1720);
+    ctx.font = "bold 180px Arial";
+    ctx.fillText("₹ " + gold1Gram, 1240, 1920);
+
+    // 4. 1 PAVAN BOX
+    ctx.fillStyle = "rgba(139, 0, 0, 0.9)"; // Dark red color
+    ctx.fillRect(400, 2100, 1680, 400);
+    ctx.fillStyle = "white";
+    ctx.font = "100px Arial";
+    ctx.fillText("GOLD 8 GRAM (1 PAVAN)", 1240, 2220);
+    ctx.font = "bold 180px Arial";
+    ctx.fillText("₹ " + gold1Pavan, 1240, 2420);
+
+ 
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+}
+
+function template3(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+drawTemplate3(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate3(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate3(ctx,canvas,share){
+
+
+
+
+// TITLE + DATE BOX (TOP LEFT)
+
+// YELLOW TRANSPARENT BACKGROUND
+ctx.fillStyle="rgba(255,215,0,0.25)";
+roundRect(ctx,80,120,1050,200,30,true,false);
+
+// WHITE BORDER
+ctx.strokeStyle="white";
+ctx.lineWidth=8;
+roundRect(ctx,80,120,1050,200,30,false,true);
+
+
+// TITLE
+ctx.textAlign="left";
+ctx.fillStyle="#FFFFFF";
+ctx.font="bold 60px Arial";
+ctx.fillText("TODAY’S GOLD RATE",120,210);
+
+ // DATE
+ctx.fillStyle="#FFFFFF";
+ctx.font="bold 100px Arial";
+ctx.fillText(rateDate,120,300);
+
+
+// -------- 1 GRAM --------
+
+// LABEL BOX
+ctx.fillStyle="rgba(0,0,0,0.6)";
+roundRect(ctx,1500,2100,400,120,25,true,false);
+
+ctx.fillStyle="white";
+ctx.textAlign="center";
+ctx.font="bold 80px Arial";
+ctx.fillText("1 Gram",1700,2180);
+
+
+// RATE BOX
+ctx.fillStyle="#b02a4a";
+roundRect(ctx,1350,2200,700,230,40,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 180px Arial";
+ctx.fillText("₹ "+gold1Gram,1700,2360);
+
+
+
+// -------- 1 PAVAN --------
+
+// LABEL BOX
+ctx.fillStyle="rgba(0,0,0,0.6)";
+roundRect(ctx,1450,2450,500,120,25,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 100px Arial";
+ctx.fillText("1 Pavan",1700,2530);
+
+
+// BIGGER RATE BOX
+ctx.fillStyle="#b02a4a";
+roundRect(ctx,1100,2550,1200,260,40,true,false);
+
+ctx.fillStyle="white";
+ctx.font="bold 210px Arial";
+ctx.fillText("₹ "+gold1Pavan,1700,2730);
+ // FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+}
+
+
+function template4(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+
+drawTemplate4(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate4(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate4(ctx,canvas,share){
+
+
+
+ctx.textAlign="center";
+
+
+// TITLE OUTLINE
+ctx.lineWidth = 10;
+ctx.fillStyle="#E2D609";
+ctx.strokeStyle = "#dcdcdc";
+ctx.font="bold 180px Arial";
+ctx.fillText("TODAY’S",1240,2000);
+ctx.fillText("GOLD RATE",1240,2200);
+
+
+// DATE
+ctx.fillStyle="#dcdcdc";
+ctx.font="bold 100px Arial";
+ctx.fillText(rateDate,1240,2400);
+
+
+
+// LEFT RATE BOX
+ctx.fillStyle="#FEFEFE";
+roundRect(ctx,300,2550,900,350,30,true,false);
+
+ctx.fillStyle="#1e1e1e";
+ctx.font="bold 160px Arial";
+ctx.fillText("₹ "+gold1Gram,750,2720);
+
+ctx.fillStyle="#7E251E";
+ctx.font="bold 120px Arial";
+ctx.fillText("1 Gram",750,2860);
+
+
+
+
+// RIGHT RATE BOX
+ctx.fillStyle="#FEFEFE";
+roundRect(ctx,1280,2550,900,350,30,true,false);
+
+ctx.fillStyle="#1e1e1e";
+ctx.font="bold 160px Arial";
+ctx.fillText("₹ "+gold1Pavan,1730,2720);
+
+ctx.fillStyle="#7E251E";
+ctx.font="bold 120px Arial";
+ctx.fillText("1 Pavan",1730,2860);
+
+
+
+
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+ // SAVE
+save(canvas, share);
+
+}
+
+function template5(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+drawTemplate5(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate5(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate5(ctx,canvas,share){
+
+
+
+
+ctx.textAlign="center";
+
+
+// TITLE
+ctx.fillStyle="white";
+ctx.font="bold 130px Arial";
+ctx.fillText("TODAY’S GOLD RATE",1240,1950);
+
+
+// 1 GRAM BOX
+ctx.fillStyle="rgba(255,255,255,0.7)";
+roundRect(ctx,780,2050,920,300,50,true,false);
+
+ctx.fillStyle="#222";
+
+// label
+ctx.font="bold 90px Arial";
+ctx.fillText("1 GRAM",1240,2150);
+
+// number
+ctx.font="bold 200px Arial";
+ctx.fillText("₹ " + gold1Gram,1240,2320);
+
+
+
+// 1 PAVAN BOX
+ctx.fillStyle="rgba(255,255,255,0.7)";
+roundRect(ctx,350,2400,1780,450,70,true,false);
+
+ctx.fillStyle="#222";
+
+ctx.font="bold 130px Arial";
+ctx.fillText("1 PAVAN",1240,2550);
+
+// CENTER FIX
+ctx.font="bold 320px Arial";
+ctx.fillText("₹ " + gold1Pavan,1240,2790);
+
+
+
+// DATE BOX
+ctx.fillStyle="#e6e6e6";
+roundRect(ctx,900,2920,700,140,30,true,false);
+
+ctx.fillStyle="#222";
+ctx.font="bold 80px Arial";
+ctx.fillText(rateDate,1240,3010);
+
+
+
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+
+}
+
+function template6(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+
+drawTemplate6(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate6(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate6(ctx,canvas,share){
+
+
+
+
+ctx.textAlign="center";
+
+
+// =====================
+// TITLE
+// =====================
+ctx.fillStyle="#f4d03f";
+ctx.font="bold 120px Arial";
+ctx.fillText("TODAY’S GOLD RATE",1240,2000);
+
+
+// =====================
+// RATE BOX
+// =====================
+ctx.lineWidth = 20;
+ctx.strokeStyle = "#6bdc22";
+ctx.fillStyle = "rgba(0,0,0,0.35)";
+
+roundRect(ctx,300,2100,1880,700,80,true,true);
+
+
+// =====================
+// DATE
+// =====================
+ctx.fillStyle="#ffffff";
+ctx.font="bold 120px Arial";
+ctx.fillText(rateDate,1240,2250);
+
+
+// =====================
+// PAVAN LABEL
+// =====================
+ctx.fillStyle="#f4d03f";
+ctx.font="bold 130px Arial";
+ctx.fillText("1 PAVAN",1240,2420);
+
+
+// =====================
+// PAVAN RATE BIG
+// =====================
+ctx.font="bold 320px Arial";
+ctx.fillText(gold1Pavan,1240,2720);
+
+
+// =====================
+// GRAM RATE
+// =====================
+ctx.fillStyle="#ffffff";
+ctx.font="bold 120px Arial";
+ctx.fillText("1 GRAM "+gold1Gram,1240,2920);
+
+
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+
+}
+
+function template7(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+drawTemplate7(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate7(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate7(ctx,canvas,share){
+
+
+
+
+ctx.textAlign="center";
+
+
+// =====================
+// TITLE
+// =====================
+ctx.fillStyle="#f4d03f";
+ctx.font="bold 140px Arial";
+ctx.fillText("TODAY’S GOLD RATE",1240,2000);
+
+
+// =====================
+// DATE BOX
+// =====================
+ctx.fillStyle="#dddddd";
+ctx.fillRect(850,2100,780,140);
+
+ctx.fillStyle="#000";
+ctx.font="bold 90px Arial";
+ctx.fillText(rateDate,1240,2200);
+
+
+// =====================
+// RATE BOX STYLE
+// =====================
+ctx.lineWidth = 10;
+ctx.strokeStyle = "#b6c94a";
+ctx.fillStyle = "rgba(0,0,0,0.55)";
+
+
+// LEFT BOX
+roundRect(ctx,300,2300,900,400,40,true,true);
+
+
+// RIGHT BOX
+roundRect(ctx,1280,2300,900,400,40,true,true);
+
+
+// =====================
+// LEFT TEXT
+// =====================
+ctx.fillStyle="white";
+
+ctx.font="bold 90px Arial";
+ctx.fillText("1 GRAM",750,2450);
+
+ctx.font="bold 180px Arial";
+ctx.fillText("₹ "+gold1Gram,750,2650);
+
+
+// =====================
+// RIGHT TEXT
+// =====================
+ctx.font="bold 90px Arial";
+ctx.fillText("1 PAVAN",1730,2450);
+
+ctx.font="bold 180px Arial";
+ctx.fillText("₹ "+gold1Pavan,1730,2650);
+
+
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+
+}
+
+function template8(ctx, canvas, share){
+
+// LOGO
+if(logoUrl){
+
+const logo = new Image();
+logo.crossOrigin="anonymous";
+logo.src = logoUrl + "?t=" + new Date().getTime();
+
+logo.onload = function(){
+
+const maxWidth = 1200;
+const maxHeight = 1200;
+
+let w = logo.width;
+let h = logo.height;
+
+// maintain aspect ratio
+if(w > maxWidth){
+  h = h * (maxWidth / w);
+  w = maxWidth;
+}
+
+if(h > maxHeight){
+  w = w * (maxHeight / h);
+  h = maxHeight;
+}
+
+// equal gap from top and right
+const gap = 80;
+
+const x = canvas.width - w - gap;
+const y = gap;
+
+ctx.drawImage(logo, x, y, w, h);
+
+drawTemplate8(ctx,canvas,share);
+
+};
+
+}else{
+
+drawTemplate8(ctx,canvas,share);
+
+}
+
+}
+
+
+
+function drawTemplate8(ctx,canvas,share){
+
+
+
+
+ctx.textAlign="center";
+
+
+// =====================
+// TITLE
+// =====================
+// =====================
+// TITLE
+// =====================
+ctx.fillStyle="#f7d64a";
+ctx.textAlign="center";
+ctx.font="bold 140px Arial";
+ctx.fillText("TODAY’S GOLD RATE",1240,1850);
+
+
+// =====================
+// DATE BOX
+// =====================
+ctx.fillStyle="#dddddd";
+ctx.fillRect(840,1920,800,150);
+
+ctx.fillStyle="#000";
+ctx.font="bold 100px Arial";
+ctx.fillText(rateDate,1240,2030);
+
+
+// =====================
+// RATE PANEL (50% transparent)
+// =====================
+ctx.fillStyle="rgba(0,0,0,0.5)";
+ctx.fillRect(300,2100,1880,450);
+
+
+// LEFT RATE
+ctx.fillStyle="white";
+ctx.textAlign="center";
+
+ctx.font="bold 100px Arial";
+ctx.fillText("1 GRAM",700,2250);
+
+ctx.font="bold 180px Arial";
+ctx.fillText("₹ "+gold1Gram,700,2450);
+
+
+// RIGHT RATE
+ctx.font="bold 100px Arial";
+ctx.fillText("1 PAVAN",1700,2250);
+
+ctx.font="bold 180px Arial";
+ctx.fillText("₹ "+gold1Pavan,1700,2450);
+
+
+// CENTER LINE
+ctx.fillStyle="white";
+ctx.fillRect(1240,2100,6,450);
+
+// FOOTER
+ctx.fillStyle="#003333";
+ctx.fillRect(0,3050,2480,450);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 120px Arial";
+ctx.fillText(shopName,1240,3200);
+
+ctx.font="90px Arial";
+ctx.fillText(place,1240,3320);
+
+ctx.font="80px Arial";
+ctx.fillText("Ph: "+contacts.join(", "),1240,3450);
+
+
+// SAVE
+save(canvas, share);
+
+}
+
+
+   function roundRect(ctx,x,y,width,height,radius,fill,stroke){
+
+ctx.beginPath();
+ctx.moveTo(x+radius,y);
+ctx.lineTo(x+width-radius,y);
+ctx.quadraticCurveTo(x+width,y,x+width,y+radius);
+ctx.lineTo(x+width,y+height-radius);
+ctx.quadraticCurveTo(x+width,y+height,x+width-radius,y+height);
+ctx.lineTo(x+radius,y+height);
+ctx.quadraticCurveTo(x,y+height,x,y+height-radius);
+ctx.lineTo(x,y+radius);
+ctx.quadraticCurveTo(x,y,x+radius,y);
+ctx.closePath();
+
+if(fill) ctx.fill();
+if(stroke) ctx.stroke();
+
+}
+  // RATES
+  function drawRates(ctx){
+
+  ctx.font="bold 180px Arial";
+  ctx.fillText("GOLD 1 GRAM",1240,1700);
+  ctx.fillText("₹ " + gold1Gram,1240,1950);
+
+  ctx.font="bold 180px Arial";
+  ctx.fillText("GOLD 1 PAVAN",1240,2300);
+  ctx.fillText("₹ " + gold1Pavan,1240,2550);
+}
+
+
+  // =====================
+  // CONTACTS
+  // =====================
+  function drawContacts(ctx){
+
+    ctx.textAlign="center";
+
+    ctx.font="bold 110px Arial";
+    ctx.fillText("For more details:",1240,3200);
+
+    ctx.font="bold 100px Arial";
+    ctx.fillText(contacts.join("  |  "),1240,3350);
+
+    ctx.font="bold 80px Arial";
+    ctx.fillText("Rate Date: " + rateDate,1240,3500);
   }
 
-  const API_URL = "https://script.google.com/macros/s/AKfycbxEnbnZSqh8sZlqF2GvMRuCf07IRcxKnwrfehjeBsRvJeNfdilEcJizIIggffo0jS074Q/exec";
 
-  fetch(API_URL + "?phone=" + phone + "&code=" + code)
-  .then(res => res.text())
-  .then(data => {
+  // =====================
+ // =====================
+function save(canvas, share=false){
 
-    if(data === "success"){
-      window.location.href =
-"https://script.google.com/macros/s/AKfycbxEnbnZSqh8sZlqF2GvMRuCf07IRcxKnwrfehjeBsRvJeNfdilEcJizIIggffo0jS074Q/exec?phone=" + phone;
-    } else {
-      document.getElementById("error").innerText = "Invalid phone or security code";
-    }
+const btn = document.getElementById("shareBtn");
 
-  })
-  .catch(() => {
-    document.getElementById("error").innerText = "Server error";
-  });
+canvas.toBlob(async function(blob){
+
+try{
+
+const today = new Date();
+const fileName =
+  today.getDate() + "." +
+  (today.getMonth()+1) + "." +
+  today.getFullYear() + ".png";
+
+// ✅ TRY SHARE FIRST (no canShare check)
+if(share && navigator.share){
+
+const file = new File([blob], fileName, {type:"image/png"});
+
+try{
+
+await navigator.share({
+files:[file],
+title:"Today's Gold Rate"
+});
+
+return; // ✅ success → stop here
+
+}catch(e){
+// ❗ user cancel / not supported
+console.log("Share failed → fallback");
 }
 
-function goRegister(){
-  window.location.href =
-"https://script.google.com/macros/s/AKfycbxEnbnZSqh8sZlqF2GvMRuCf07IRcxKnwrfehjeBsRvJeNfdilEcJizIIggffo0jS074Q/exec?phone=" + phone;
 }
 
-</script>
+// ✅ FALLBACK DOWNLOAD
+downloadFile(blob, fileName);
 
+resetBtn();
+
+}catch(err){
+
+downloadFile(blob, fileName);
+resetBtn();
+
+}
+
+}, "image/png");
+
+   
+function downloadFile(blob, fileName){
+
+const link = document.createElement("a");
+link.download = fileName;
+link.href = URL.createObjectURL(blob);
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+}
+
+
+}
+// =====================
+// ✅ GLOBAL FUNCTION
+function disableShareBtn(text){
+
+const btn = document.getElementById("shareBtn");
+
+btn.innerText = text;
+btn.classList.remove("share-loading");
+btn.classList.add("share-disabled");
+
+btn.style.pointerEvents = "none";
+
+}
+// RESET BUTTON (GLOBAL)
+// =====================
+function resetBtn(){
+
+const btn = document.getElementById("shareBtn");
+
+btn.classList.remove("share-loading","share-disabled");
+btn.innerText = "Share";
+btn.style.pointerEvents = "auto";
+
+}
+
+   function openWhatsApp(){
+
+window.open(
+"https://wa.me/919656100346",
+"_blank"
+);
+
+}
+
+function logoutUser(){
+
+localStorage.removeItem("userPhone");
+
+window.location.href = "login.html";
+
+}
+   </script>
 </body>
 </html>
