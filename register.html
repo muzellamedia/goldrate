@@ -78,6 +78,15 @@ align-items:center;
 z-index:9999;
 }
 
+  .popup-box button{
+background:#006400;
+color:white;
+padding:10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+  
 .popup-box{
 background:white;
 padding:25px;
@@ -133,7 +142,7 @@ width:90%;
 <div id="successPopup" class="popup-overlay">
 <div class="popup-box">
 <h3>Registration Successful</h3>
-<p>Your Code:</p>
+<p>Your Security Code is:</p>
 <h2 id="securityCode"></h2>
 <button onclick="goHome()">Go Home</button>
 </div>
@@ -221,8 +230,7 @@ await uploadBytes(footerRef,footerFile);
 const footerURL = await getDownloadURL(footerRef);
 
 // code generate
-const code = Math.floor(100000 + Math.random()*900000);
-
+const code = Math.floor(1000 + Math.random()*9000);
 await setDoc(userRef,{
 phone, shop, place, district, state,
 products,
@@ -234,7 +242,8 @@ createdAt: new Date()
 
 localStorage.setItem("userPhone",phone);
 
-alert("Registration Success! Code: "+code);
+document.getElementById("securityCode").innerText = code;
+document.getElementById("successPopup").style.display = "flex";
 
 }
 catch(err){
