@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Recharge Plan</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<style>
+
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#b8860b,#ffd700);
+margin:0;
+padding:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+}
+
+.card{
+background:white;
+width:100%;
+max-width:380px;
+padding:25px;
+border-radius:14px;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+text-align:center;
+}
+
+h2{
+margin-bottom:15px;
+}
+
+select{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:8px;
+background:#b8860b;
+color:white;
+font-weight:bold;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#a07600;
+}
+
+.note{
+font-size:13px;
+color:#555;
+margin-top:10px;
+}
+
+.loading{
+opacity:0.7;
+pointer-events:none;
+}
+
+.loader{
+border:3px solid #f3f3f3;
+border-top:3px solid white;
+border-radius:50%;
+width:16px;
+height:16px;
+animation:spin 1s linear infinite;
+display:inline-block;
+margin-right:6px;
+vertical-align:middle;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Recharge Plan</h2>
+
+<select id="plan">
+<option value="365">1 Year - ₹1500</option>
+</select>
+
+<button id="rechargeBtn" onclick="payNow()">Recharge Now</button>
+
+<div class="note">
+Secure Payment via Razorpay
+</div>
+
+</div>
+
+<script>
+
+const API_URL = "https://script.google.com/macros/s/AKfycbwrs9QIs2yy_aQQNEnvtGUiHIe-Wf9vc_gzmPFISzzYDSDB9H5KG-4fiuWeTNY0twAptQ/exec";
+const phone = localStorage.getItem("userPhone");
+const SECRET = "Gold@Security";
+
+function resetBtn(){
+const btn = document.getElementById("rechargeBtn");
+btn.disabled = false;
+btn.classList.remove("loading");
+btn.innerHTML = "Recharge Now";
+}
+
+function payNow(){
+
+const btn = document.getElementById("rechargeBtn");
+
+// prevent double click
+btn.disabled = true;
+btn.classList.add("loading");
+btn.innerHTML = '<span class="loader"></span> Processing...';
+
+const days = document.getElementById("plan").value;
+
+// login check
+if(!phone){
+alert("Please login first");
+resetBtn();
+return;
+}
+
+// create order
+fetch(API_URL,{
+method:"POST",
+body: JSON.stringify({
+type:"createOrder",
+phone:phone,
+days:days,
+key: SECRET
+})
+})
+.then(res=>res.json())
+.then(order=>{
+
+if(!order.id){
+alert("Order creation failed");
+resetBtn();
+return;
+}
+
+const options = {
+key: "rzp_live_SPsWDkDKR0uHcI",
+amount: order.amount,
+currency: "INR",
+order_id: order.id,
+
+prefill: {
+contact: phone
+},
+
+handler:function(){
+alert("Payment Successful");
+location.href="index.html";
+},
+
+modal:{
+ondismiss:function(){
+resetBtn();
+}
+}
+
+};
+
+const rzp = new Razorpay(options);
+rzp.open();
+
+})
+.catch(err=>{
+console.log(err);
+alert("Payment failed");
+resetBtn();
+});
+
+}
+
+</script>
+
+</body>
+</html>
