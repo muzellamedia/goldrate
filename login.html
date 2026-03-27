@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Rate Poster Service Login</title>
+
+<style>
+
+body{
+  font-family: Arial;
+  background: linear-gradient(135deg,#b8860b,#ffd700);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  margin:0;
+  padding:10px;
+}
+
+/* TITLE */
+
+.title{
+  text-align:center;
+  color:white;
+  margin-bottom:20px;
+}
+
+.title h1{
+  margin:0;
+  font-size:28px;
+}
+
+.title p{
+  margin:5px 0 0 0;
+  font-size:14px;
+}
+
+/* LOGIN BOX */
+
+.login-box{
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  width:100%;
+  max-width:330px;
+  text-align:center;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.login-box h2{
+  margin-top:0;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.login-btn{
+  background:#b8860b;
+  color:white;
+}
+
+.login-btn:hover{
+  background:#a07600;
+}
+
+.register-btn{
+  background:#444;
+  color:white;
+}
+
+.register-btn:hover{
+  background:#222;
+}
+
+.error{
+  color:red;
+  margin-top:10px;
+}
+.forgot-btn{
+  background:#25D366;
+  color:white;
+}
+
+.forgot-btn:hover{
+  background:#1da851;
+}
+
+
+.login-btn{
+background:#b8860b;
+color:white;
+}
+
+.login-btn:hover{
+background:#a07600;
+}
+
+.register-btn{
+background:#444;
+color:white;
+}
+
+.register-btn:hover{
+background:#222;
+}
+
+.error{
+color:red;
+margin-top:10px;
+}
+
+.forgot-btn{
+background:#25D366;
+color:white;
+}
+
+.forgot-btn:hover{
+background:#1da851;
+}
+
+/* SAMPLE POSTERS */
+
+.samples{
+margin-top:30px;
+max-width:700px;
+width:100%;
+}
+
+.samples h3{
+text-align:center;
+color:white;
+margin-bottom:15px;
+}
+
+.sample-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:12px;
+}
+
+.sample-grid img{
+width:100%;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+transition:transform 0.3s;
+}
+
+.sample-grid img:hover{
+transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div class="title">
+<h1>💎 Daily Gold Poster</h1>
+<p>Download System</p>
+</div>
+
+<div class="login-box">
+  <h2>Login</h2>
+
+  <input type="text" id="phone" placeholder="Phone Number">
+  <input type="password" id="code" placeholder="Security Code">
+
+  <button class="login-btn" onclick="login()">Login</button>
+  <button class="register-btn" onclick="goRegister()">Register</button>
+  <button class="forgot-btn" onclick="openWhatsApp()">
+Forgot Security Code?
+</button>
+
+  <div class="error" id="error"></div>
+</div>
+<div class="samples">
+
+<h3>Sample Posters</h3>
+
+<div class="sample-grid">
+
+<img src="https://lh3.googleusercontent.com/d/1HFWZ_ffeaQpSEk7APilLSIpnZL_7wBEH">
+
+<img src="https://lh3.googleusercontent.com/d/1WqEo6H7rsAQWnRKdGv6AXCKZQ0id1hMJ">
+
+<img src="https://lh3.googleusercontent.com/d/11Cds-94V4LjcxWjwcrY3uBUKujRrpoS0">
+
+<img src="https://lh3.googleusercontent.com/d/1HFWZ_ffeaQpSEk7APilLSIpnZL_7wBEH">
+
+</div>
+  </div>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBxnjf4XDfnr4kj6mb-bR_wHW_3ZT0e9BU",
+  authDomain: "gold-5735f.firebaseapp.com",
+  projectId: "gold-5735f",
+  storageBucket: "gold-5735f.firebasestorage.app",
+  messagingSenderId: "5295731508",
+  appId: "1:5295731508:web:07d5430da5ebaaf6886b61"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
+
+window.login = async function(){
+
+const btn = document.querySelector(".login-btn");
+
+const phone = document.getElementById("phone").value.trim();
+const code = document.getElementById("code").value.trim();
+
+if (!phone || !code) {
+  document.getElementById("error").innerText = "Please fill all fields";
+  return;
+}
+
+if(!/^[0-9]{10}$/.test(phone)){
+  document.getElementById("error").innerText = "Enter valid phone number";
+  return;
+}
+
+btn.disabled = true;
+btn.innerText = "Logging...";
+
+try{
+
+const userRef = doc(db,"users",phone);
+const userSnap = await getDoc(userRef);
+
+if(userSnap.exists()){
+
+  const data = userSnap.data();
+
+  if(data.code == code){
+
+    localStorage.setItem("userPhone", phone);
+    window.location.href = "index.html";
+
+  } else {
+    document.getElementById("error").innerText = "Invalid security code";
+    btn.disabled = false;
+    btn.innerText = "Login";
+  }
+
+} else {
+
+  document.getElementById("error").innerText = "User not found";
+  btn.disabled = false;
+  btn.innerText = "Login";
+
+}
+
+}
+catch(err){
+console.log(err);
+document.getElementById("error").innerText = "Error occurred";
+btn.disabled = false;
+btn.innerText = "Login";
+}
+
+}
+function goRegister(){
+  // Optional: create separate register.html in GitHub
+  window.location.href = "register.html";
+}
+function openWhatsApp(){
+
+const msg = encodeURIComponent("I am forget my security code!");
+
+window.open(
+"https://wa.me/919656100346?text=" + msg,
+"_blank"
+);
+
+}
+</script>
+
+</body>
+</html>
