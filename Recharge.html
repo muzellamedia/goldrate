@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <title>Recharge Plan</title>
@@ -66,7 +65,6 @@ font-size:13px;
 color:#555;
 margin-top:10px;
 }
-
 .loading{
 opacity:0.7;
 pointer-events:none;
@@ -88,9 +86,7 @@ vertical-align:middle;
 0%{transform:rotate(0deg);}
 100%{transform:rotate(360deg);}
 }
-
 </style>
-
 </head>
 
 <body>
@@ -100,7 +96,6 @@ vertical-align:middle;
 <h2>Recharge Plan</h2>
 
 <select id="plan">
-<option value="2">2 Days - ₹50</option>
 <option value="365">1 Year - ₹1500</option>
 </select>
 
@@ -114,23 +109,17 @@ Secure Payment via Razorpay
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxItCL3ckQzxXPIHQcYii49lgHPZjDtO9gCIgw32t9d1C-sq2yPP1Dx6o2sxXfK4wh0/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx29AdsCgQQO2A_AO3btBwlQSUVLh5uQ5tGrWvtHIgKaYiYYnzBHZZVByXLqS_TViaw/exec";
 const phone = localStorage.getItem("userPhone");
 const SECRET = "Gold@Security";
-
-function resetBtn(){
-const btn = document.getElementById("rechargeBtn");
-btn.disabled = false;
-btn.classList.remove("loading");
-btn.innerHTML = "Recharge Now";
-}
 
 function payNow(){
 
 const btn = document.getElementById("rechargeBtn");
 
-// prevent double click
+// prevent multiple click
 btn.disabled = true;
+
 btn.classList.add("loading");
 btn.innerHTML = '<span class="loader"></span> Processing...';
 
@@ -138,54 +127,36 @@ const days = document.getElementById("plan").value;
 
 // login check
 if(!phone){
-alert("Please login first");
-resetBtn();
-return;
+  alert("Please login first");
+  btn.disabled = false;
+  return;
 }
 
-// create order
-fetch(API_URL,{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify({
-type:"createOrder",
-phone:phone,
-days:days,
-key: SECRET
-})
-})
+
+const url = API_URL +
+"?type=createOrder" +
+"&phone=" + phone +
+"&days=" + days +
+"&key=" + SECRET;
+
+fetch(url)
 .then(res=>res.json())
 .then(order=>{
 
-if(!order.id){
-alert("Order creation failed");
-resetBtn();
-return;
-}
-
 const options = {
-key: "rzp_live_SPsWDkDKR0uHcI",
-amount: order.amount,
-currency: "INR",
-order_id: order.id,
+  key: "rzp_live_SPsWDkDKR0uHcI",
+  amount: order.amount,
+  currency: "INR",
+  order_id: order.id,
 
-prefill: {
-contact: phone
-},
+  prefill: {
+    contact: phone
+  },
 
-handler:function(){
-alert("Payment Successful");
-location.href="index.html";
-},
-
-modal:{
-ondismiss:function(){
-resetBtn();
-}
-}
-
+  handler:function(){
+    alert("Payment Successful");
+    location.href="index.html";
+  }
 };
 
 const rzp = new Razorpay(options);
@@ -193,9 +164,9 @@ rzp.open();
 
 })
 .catch(err=>{
-console.log(err);
 alert("Payment failed");
-resetBtn();
+btn.classList.remove("loading");
+btn.innerHTML = "Recharge Now";
 });
 
 }
