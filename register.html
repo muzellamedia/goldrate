@@ -232,12 +232,23 @@ const footerURL = await getDownloadURL(footerRef);
 // code generate
 const code = Math.floor(1000 + Math.random()*9000);
 await setDoc(userRef,{
-phone, shop, place, district, state,
+phone,
+shop,
+place,
+district,
+state,
+
 products,
 logoURL,
 footerURL,
+
 code,
-createdAt: new Date()
+createdAt: new Date(),
+
+// 🔥 ADD THIS
+planDays: 0,
+planExpiry: "",
+status: "inactive"
 });
 
 localStorage.setItem("userPhone",phone);
