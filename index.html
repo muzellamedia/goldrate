@@ -444,14 +444,13 @@ Mukkam, Kozhikode, Kerala 673602
 // =====================
 // GLOBAL
 // =====================
-// GLOBAL
-// =====================
+
 let shopName = "";
 let place = "";
 let district = "";
 let state = "";
 
-let products = []; // 916, 22k, silver
+let products = [];
 
 let logoUrl = "";
 let footerUrl = "";
@@ -465,10 +464,17 @@ let rateSilver_1g = "";
 let rateDate = "";
 let rateTime = "";
 
+// 🔥 PLAN
+let planExpiry = "";
+let planStatus = "";
+
+// 🔥 DIFF (rate change)
+let diff22k_1g = 0;
+let diffText = ""; // "↑ 200" or "↓ 150"
+
 // UI control
 let lastTemplate = -1;
 let lastBg = -1;
-
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -543,8 +549,29 @@ resetBtn();
 
 }
 
+function isPlanActive(){
 
+if(!planExpiry) return false;
 
+const today = new Date();
+const expiry = new Date(planExpiry);
+
+return expiry > today;
+}
+
+  function calculateDiff(todayRate, yesterdayRate){
+
+diff22k_1g = todayRate - yesterdayRate;
+
+if(diff22k_1g > 0){
+  diffText = "↑ " + diff22k_1g;
+}else if(diff22k_1g < 0){
+  diffText = "↓ " + Math.abs(diff22k_1g);
+}else{
+  diffText = "No Change";
+}
+}
+  
 // =====================
 // INIT LOAD
 // =====================
