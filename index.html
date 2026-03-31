@@ -521,71 +521,54 @@ const rechargeBtn = document.getElementById("rechargeBtn");
 // =====================
 shareBtn.onclick = async function(){
 
-shareBtn.classList.add("share-loading");
-shareBtn.innerText = "";
-shareBtn.style.pointerEvents = "none";
+  shareBtn.classList.add("share-loading");
+  shareBtn.innerText = "";
+  shareBtn.style.pointerEvents = "none";
 
-try{
+  try{
 
-// 🔥 USER DATA
-const userRef = doc(db,"users",phone);
-const userSnap = await getDoc(userRef);
+    const userRef = doc(db,"users",phone);
+    const userSnap = await getDoc(userRef);
 
-if(!userSnap.exists()){
-  alert("User not found");
-  resetBtn();
-  return;
-}
+    if(!userSnap.exists()){
+      alert("User not found");
+      resetBtn();
+      return;
+    }
 
-const userData = userSnap.data();
+    const userData = userSnap.data();
 
-  const bgRef = doc(db,"settings","backgrounds");
-const bgSnap = await getDoc(bgRef);
+    const bgRef = doc(db,"settings","backgrounds");
+    const bgSnap = await getDoc(bgRef);
 
-if(bgSnap.exists()){
-  backgrounds = bgSnap.data().list || [];
-}
-  
-// =====================
-// PLAN CHECK ONLY
-// =====================
-if(!userData.planExpiry){
-  disableShareBtn("No Plan");
-  return;
-}
+    if(bgSnap.exists()){
+      backgrounds = bgSnap.data().list || [];
+    }
 
-const expiry = new Date(userData.planExpiry);
+    // PLAN CHECK
+    if(!userData.planExpiry){
+      disableShareBtn("No Plan");
+      return;
+    }
 
-if(expiry < new Date()){
-  disableShareBtn("Plan Expired");
-  return;
-}
+    const expiry = new Date(userData.planExpiry);
 
-// =====================
-// GENERATE POSTER
-// =====================
-generatePoster(true);
+    if(expiry < new Date()){
+      disableShareBtn("Plan Expired");
+      return;
+    }
 
-}catch(err){
+    // GENERATE
+    generatePoster(true);
 
-console.log(err);
-alert("Network error");
-resetBtn();
-
-}
+  }catch(err){
+    console.log(err);
+    alert("Network error");
+    resetBtn();
+  }
 
 };
 
-
-}catch(err){
-console.log(err);
-alert("Network error");
-resetBtn();
-}
-
-};
-
-const userData = userSnap.data();
 
 
 // =====================
