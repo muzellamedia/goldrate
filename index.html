@@ -571,20 +571,18 @@ shareBtn.onclick = async function(){
 
 
 
-// =====================
-// UPDATE COUNT
-// =====================
-await setDoc(downloadRef,{
-  count: count + 1
-});
+try{
+
+  await setDoc(downloadRef,{
+    count: count + 1
+  });
 
 }catch(err){
-console.log(err);
-alert("Network error");
-resetBtn();
+  console.log(err);
+  alert("Network error");
+  resetBtn();
 }
-
-};
+  
 function isPlanActive(){
 
 if(!planExpiry) return false;
