@@ -736,8 +736,20 @@ document.getElementById("rechargeBtn").style.display = "none";
 
 // =====================
 // REMOVE LOADING
-// =====================
-document.getElementById("loadingScreen").style.display = "none";
+    document.getElementById("loadingScreen").style.display = "none";
+
+    // SHARE BUTTON
+    shareBtn.onclick = () => {
+      alert("Poster generation working (test)");
+    };
+
+  }catch(err){
+    console.log(err);
+    alert("Network error");
+  }
+
+});
+
  
 // =====================
 // DOWNLOAD (NO LIMIT)
@@ -1174,33 +1186,22 @@ btn.style.pointerEvents = "none";
 }
 // RESET BUTTON (GLOBAL)
 // =====================
-function resetBtn(){
-
-const btn = document.getElementById("shareBtn");
-
-btn.classList.remove("share-loading","share-disabled");
-btn.innerText = "Share";
-btn.style.pointerEvents = "auto";
-
+function disableShareBtn(text){
+  const btn = document.getElementById("shareBtn");
+  btn.innerText = text;
+  btn.style.pointerEvents = "none";
 }
 
-   function openWhatsApp(){
-
-window.open(
-"https://wa.me/919656100346",
-"_blank"
-);
-
-}
 
 function logoutUser(){
-
-localStorage.removeItem("userPhone");
-
-window.location.href = "login.html";
+  localStorage.removeItem("userPhone");
+  window.location.href = "login.html";
 }
 
+function openWhatsApp(){
+  window.open("https://wa.me/919656100346","_blank");
 }
-   </script>
+
+</script>
 </body>
 </html>
