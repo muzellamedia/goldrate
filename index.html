@@ -472,7 +472,102 @@ if(!phone){
 // MAIN LOAD
 // =====================
 window.addEventListener("DOMContentLoaded", async () => {
+// =====================
+// LOAD USER + RATES
+// =====================
+try{
 
+  const userRef = doc(db,"users",phone);
+  const userSnap = await getDoc(userRef);
+
+  if(userSnap.exists()){
+
+    const user = userSnap.data();
+
+    // SHOP DETAILS
+    document.getElementById("shopName").innerText = user.shop || "";
+    document.getElementById("place").innerText = user.place || "";
+    document.getElementById("district").innerText = user.district || "";
+
+    // LOGO
+    if(user.logoURL){
+      document.getElementById("logoBox").innerHTML =
+        `<img src="${user.logoURL}">`;
+    }
+
+    // =====================
+    // PLAN CHECK
+    // =====================
+    const statusPlan = document.getElementById("statusPlan");
+
+    if(!user.planExpiry){
+      statusPlan.innerText = "No Plan";
+      statusPlan.style.background = "red";
+    }else{
+
+      const expiry = new Date(user.planExpiry);
+      const today = new Date();
+
+      if(expiry < today){
+        statusPlan.innerText = "Plan Expired";
+        statusPlan.style.background = "red";
+      }else{
+        const days = Math.ceil((expiry - today)/(1000*60*60*24));
+        statusPlan.innerText = "Plan Active - " + days + " Days";
+        statusPlan.style.background = "green";
+      }
+
+    }
+
+  }
+
+  // =====================
+  // LOAD RATES
+  // =====================
+  const rateRef = doc(db,"settings","rates");
+  const rateSnap = await getDoc(rateRef);
+
+  if(rateSnap.exists()){
+
+    const rates = rateSnap.data();
+
+    const statusHeader = document.getElementById("statusHeader");
+    const statusDate = document.getElementById("statusDate");
+    const statusTime = document.getElementById("statusTime");
+
+    let rawDate = rates.date || "";
+    let rawTime = rates.time || "";
+
+    if(rawDate){
+
+      const today = new Date().toISOString().slice(0,10);
+      const rateDateISO = new Date(rawDate).toISOString().slice(0,10);
+
+      // DATE FORMAT
+      const d = new Date(rawDate);
+      const formatted =
+        String(d.getDate()).padStart(2,'0') + "-" +
+        String(d.getMonth()+1).padStart(2,'0') + "-" +
+        d.getFullYear();
+
+      statusDate.innerText = formatted;
+      statusTime.innerText = rawTime || "--";
+
+      if(rateDateISO === today){
+        statusHeader.innerText = "Gold Rate Updated";
+        statusHeader.style.background = "#0a6b3c";
+      }else{
+        statusHeader.innerText = "Gold Rate Not Updated";
+        statusHeader.style.background = "red";
+      }
+
+    }
+
+  }
+
+}catch(err){
+  console.log(err);
+}
   const shareBtn = document.getElementById("shareBtn");
   const rechargeBtn = document.getElementById("rechargeBtn");
 
