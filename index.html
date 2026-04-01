@@ -440,58 +440,26 @@ Mukkam, Kozhikode, Kerala 673602
 
  <script type="module">
 
-
 // =====================
 // GLOBAL
 // =====================
-
-let shopName = "";
-let place = "";
-let district = "";
-let state = "";
-
-let products = [];
 let backgrounds = [];
-let logoUrl = "";
-let footerUrl = "";
-
-// GOLD RATES
-let rate22k_1g = "";
-let rate22k_1p = "";
-let rate18k_1g = "";
-let rateSilver_1g = "";
-
-let rateDate = "";
-let rateTime = "";
-
-// 🔥 PLAN
-let planExpiry = "";
-let planStatus = "";
-
-// 🔥 DIFF (rate change)
-let diff22k_1g = 0;
-let diffText = ""; // "↑ 200" or "↓ 150"
-
-// UI control
-let lastTemplate = -1;
 let lastBg = -1;
 
+// =====================
+// FIREBASE
+// =====================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBxnjf4XDfnr4kj6mb-bR_wHW_3ZT0e9BU",
   authDomain: "gold-5735f.firebaseapp.com",
-  projectId: "gold-5735f",
-  storageBucket: "gold-5735f.firebasestorage.app",
-  messagingSenderId: "5295731508",
-  appId: "1:5295731508:web:07d5430da5ebaaf6886b61"
+  projectId: "gold-5735f"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 const phone = localStorage.getItem("userPhone");
 
@@ -500,64 +468,21 @@ if(!phone){
   location.href="login.html";
 }
 
-
 // =====================
 // MAIN LOAD
 // =====================
-window.addEventListener("DOMContentLoaded", async function(){
-
-const shareBtn = document.getElementById("shareBtn");
-const planStatus = document.getElementById("planStatus");
-const rechargeBtn = document.getElementById("rechargeBtn");
-
-
-// =====================
-// SHARE BUTTON (CLEAN)
-// =====================
-shareBtn.onclick = async function(){
-
-  shareBtn.classList.add("share-loading");
-  shareBtn.innerText = "";
-  shareBtn.style.pointerEvents = "none";
-
-  try{
-
-    const userRef = doc(db,"users",phone);
-    const userSnap = await getDoc(userRef);
-
-    if(!userSnap.exists()){
-      alert("User not found");
-      resetBtn();
-      return;
-    }
-
-    const userData = userSnap.data();
-
-    const bgRef = doc(db,"settings","backgrounds");
-    const bgSnap = await getDoc(bgRef);
-
-    if(bgSnap.exists()){
-      backgrounds = bgSnap.data().list || [];
-    }
-
-    // PLAN CHECK
-    if(!userData.planExpiry){
-      disableShareBtn("No Plan");
-      return;
-    }
-
-    // =====================
-// MAIN LOAD
-// =====================
-window.addEventListener("DOMContentLoaded", async function(){
+window.addEventListener("DOMContentLoaded", async () => {
 
   const shareBtn = document.getElementById("shareBtn");
   const rechargeBtn = document.getElementById("rechargeBtn");
 
+  // REMOVE LOADING
+  document.getElementById("loadingScreen").style.display = "none";
+
   // =====================
   // SHARE BUTTON
   // =====================
-  shareBtn.onclick = async function(){
+  shareBtn.onclick = async () => {
 
     shareBtn.classList.add("share-loading");
     shareBtn.innerText = "";
@@ -580,11 +505,7 @@ window.addEventListener("DOMContentLoaded", async function(){
       const bgRef = doc(db,"settings","backgrounds");
       const bgSnap = await getDoc(bgRef);
 
-      if(bgSnap.exists()){
-        backgrounds = bgSnap.data().list || [];
-      }else{
-        backgrounds = [];
-      }
+      backgrounds = bgSnap.exists() ? bgSnap.data().list || [] : [];
 
       // PLAN CHECK
       if(!userData.planExpiry){
@@ -600,11 +521,11 @@ window.addEventListener("DOMContentLoaded", async function(){
         return;
       }
 
-      // SUCCESS → GENERATE
-      generatePoster(true);
+      // GENERATE POSTER
+      generatePoster();
 
     }catch(err){
-      console.log("ERROR:", err);
+      console.log(err);
       alert("Network error");
       resetBtn();
     }
@@ -613,614 +534,55 @@ window.addEventListener("DOMContentLoaded", async function(){
 
 });
 
-  
-function isPlanActive(){
-
-if(!planExpiry) return false;
-
-const today = new Date();
-const expiry = new Date(planExpiry);
-
-return expiry > today;
-}
-
-  function calculateDiff(todayRate, yesterdayRate){
-
-diff22k_1g = todayRate - yesterdayRate;
-
-if(diff22k_1g > 0){
-  diffText = "↑ " + diff22k_1g;
-}else if(diff22k_1g < 0){
-  diffText = "↓ " + Math.abs(diff22k_1g);
-}else{
-  diffText = "No Change";
-}
-}
-  
 // =====================
-// INIT LOAD
+// POSTER GENERATE (TEST VERSION)
 // =====================
-
-// =====================
-// =====================
-// USER DATA (FIREBASE)
-// =====================
-shopName = user.shop || "";
-place = user.place || "";
-district = user.district || "";
-state = user.state || "";
-
-logoUrl = user.logoURL || "";
-footerUrl = user.footerURL || "";
-
-products = user.products || [];
-
-// UI
-document.getElementById("shopName").innerText = shopName;
-document.getElementById("place").innerText = place;
-document.getElementById("district").innerText = district;
-
-// =====================
-// LOGO (FIREBASE DIRECT)
-// =====================
-if(logoUrl){
-document.getElementById("logoBox").innerHTML =
-  "<img src='"+logoUrl+"'>";
-}
-
-// =====================
-// FOOTER (NEW)
-// =====================
-if(footerUrl){
-document.getElementById("footerBox").innerHTML =
-  "<img src='"+footerUrl+"' style='width:100%'>";
-}
-
-// =====================
-// RATES (FIREBASE)
-// =====================
-rate22k_1g = rates.gold22_1g || 0;
-rate22k_1p = rates.gold22_1p || 0;
-rate18k_1g = rates.gold18_1g || 0;
-rateSilver_1g = rates.silver_1g || 0;
-
-let rawDate = rates.date || "";
-let rawTime = rates.time || "";
-
-rateTime = rawTime;
-
-// format numbers
-rate22k_1g = Number(rate22k_1g).toLocaleString("en-IN");
-rate22k_1p = Number(rate22k_1p).toLocaleString("en-IN");
-rate18k_1g = Number(rate18k_1g).toLocaleString("en-IN");
-rateSilver_1g = Number(rateSilver_1g).toLocaleString("en-IN");
-
-// format date
-if(rawDate){
-const d = new Date(rawDate);
-
-const day = String(d.getDate()).padStart(2,'0');
-const month = String(d.getMonth()+1).padStart(2,'0');
-const year = d.getFullYear();
-
-rateDate = `${day}-${month}-${year}`;
-}
-
-// =====================
-// RATE STATUS
-// =====================
-const today = new Date().toISOString().slice(0,10);
-const rateDateISO = rawDate ? new Date(rawDate).toISOString().slice(0,10) : "";
-
-const statusHeader = document.getElementById("statusHeader");
-const statusDate = document.getElementById("statusDate");
-const statusTime = document.getElementById("statusTime");
-const statusPlan = document.getElementById("statusPlan");
-
-if(rateDateISO === today){
-
-statusHeader.innerText = "Today's Gold Rate Updated";
-statusHeader.style.background = "#0a6b3c";
-
-statusDate.innerText = rateDate;
-statusTime.innerText = rateTime;
-
-}else{
-
-statusHeader.innerText = "Today's Gold Rate Not Updated";
-statusHeader.style.background = "#e60000";
-
-statusDate.innerText = rateDate || "--";
-statusTime.innerText = rateTime || "--";
-
-disableShareBtn("Rate Not Updated");
-
-}
-
-// =====================
-// PLAN STATUS (FIREBASE)
-// =====================
-const expiry = user.planExpiry ? new Date(user.planExpiry) : null;
-const todayDate = new Date();
-
-if(!expiry || todayDate > expiry){
-
-statusPlan.innerText = "Plan Expired";
-statusPlan.style.background = "#e60000";
-statusPlan.style.color = "yellow";
-
-disableShareBtn("Plan Expired");
-document.getElementById("rechargeBtn").style.display = "block";
-
-}else{
-
-const diffTime = expiry - todayDate;
-const remainingDays = Math.ceil(diffTime / (1000*60*60*24));
-
-statusPlan.innerText = "Plan Active - " + remainingDays + " Days";
-statusPlan.style.background = "#0a6b3c";
-statusPlan.style.color = "yellow";
-
-document.getElementById("rechargeBtn").style.display = "none";
-
-}
-
-// =====================
-// REMOVE LOADING
-    document.getElementById("loadingScreen").style.display = "none";
-
-    // SHARE BUTTON
-    shareBtn.onclick = () => {
-      alert("Poster generation working (test)");
-    };
-
- 
-// =====================
-// DOWNLOAD (NO LIMIT)
-// =====================
-function downloadPoster(share=false){
-
-// ❌ remove API call
-// ✅ directly generate
-
-generatePoster(share);
-
-}
-
-
-// =====================
-// GENERATE POSTER
-// =====================
-function generatePoster(share=false){
-
-const btn = document.getElementById("shareBtn");
-
-// animation
-btn.classList.add("share-loading");
-btn.innerText = "";
-btn.style.pointerEvents = "none";
-
-// wait background
-if(backgrounds.length === 0){
-
-setTimeout(function(){
-generatePoster(share);
-},500);
-
-return;
-
-}
-
-let bgIndex;
-
-// 🔥 random background (no repeat)
-do{
-bgIndex = Math.floor(Math.random() * backgrounds.length);
-}while(bgIndex === lastBg);
-
-lastBg = bgIndex;
-
-createPoster(backgrounds[bgIndex], share);
-
-}
-
-
-// =====================
-// CREATE POSTER
-// =====================
-function createPoster(bgUrl, share){
-
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.width = 2480;
-canvas.height = 3508;
-
-const bg = new Image();
-bg.crossOrigin = "anonymous";
-bg.src = bgUrl;
-
-bg.onload = function(){
-
-ctx.drawImage(bg,0,0,2480,3508);
-
-// 🔥 templates
-const templateList = [
-template1
-];
-
-let index;
-
-// 🔥 random template (no repeat)
-do{
-index = Math.floor(Math.random() * templateList.length);
-}while(index === lastTemplate);
-
-lastTemplate = index;
-
-// render
-drawFooter(ctx, canvas, function(){
-
-templateList[index](ctx, canvas, share);
-
-});
-
-bg.onerror = function(){
-alert("Background failed to load");
-};
-
-}
-
- 
-function template1(ctx, canvas){
-
-// =====================
-// LOGO
-// =====================
-if(logoUrl){
-
-const logo = new Image();
-logo.crossOrigin="anonymous";
-logo.src = logoUrl + "?t=" + new Date().getTime();
-
-logo.onload = function(){
-
-const maxWidth = 700;
-const maxHeight = 400;
-
-let w = logo.width;
-let h = logo.height;
-
-if(w > maxWidth){
-h = h * (maxWidth / w);
-w = maxWidth;
-}
-
-if(h > maxHeight){
-w = w * (maxHeight / h);
-h = maxHeight;
-}
-
-const x = 1700;
-const y = 120;
-
-// background
-ctx.fillStyle = "rgba(255,255,255,0.9)";
-roundRect(ctx,x-40,y-40,w+80,h+80,30,true,false);
-
-// border
-ctx.strokeStyle = "white";
-ctx.lineWidth = 8;
-roundRect(ctx,x-40,y-40,w+80,h+80,30,false,true);
-
-ctx.drawImage(logo,x,y,w,h);
-
-drawTemplate4(ctx,canvas);
-
-};
-
-}else{
-drawTemplate4(ctx,canvas);
-}
-
-}
-
-
-// =====================
-// MAIN DESIGN
-// =====================
-function drawTemplate1(ctx,canvas){
-
-ctx.textAlign="center";
-
-// =====================
-// DATE BOX
-// =====================
-ctx.fillStyle="rgba(255,215,0,0.25)";
-roundRect(ctx,80,120,1050,200,30,true,false);
-
-ctx.strokeStyle="white";
-ctx.lineWidth=8;
-roundRect(ctx,80,120,1050,200,30,false,true);
-
-ctx.textAlign="left";
-ctx.fillStyle="#FFFFFF";
-
-ctx.font="bold 60px Arial";
-ctx.fillText("TODAY GOLD RATE",120,210);
-
-ctx.font="bold 100px Arial";
-ctx.fillText(rateDate,120,300);
-
-ctx.textAlign="center";
-
-// =====================
-// DYNAMIC RATE BOXES
-// =====================
-let y = 1600;
-
-// 👉 22K GOLD
-if(products.includes("22K Gold")){
-
-drawRateBox(ctx,
-"22K GOLD 1 GRAM",
-rate22k_1g,
-y
-);
-
-y += 450;
-
-drawRateBox(ctx,
-"22K GOLD 1 PAVAN",
-rate22k_1p,
-y
-);
-
-y += 500;
-}
-
-// 👉 18K GOLD
-if(products.includes("18K Gold")){
-
-drawRateBox(ctx,
-"18K GOLD 1 GRAM",
-rate18k_1g,
-y
-);
-
-y += 500;
-}
-
-// 👉 SILVER
-if(products.includes("Silver")){
-
-drawRateBox(ctx,
-"SILVER 1 GRAM",
-rateSilver_1g,
-y
-);
-
-}
-
-// =====================
-// FOOTER IMAGE
-// =====================
-drawFooter(ctx, canvas, function(){
-
-save(canvas);
-
-});
-
-}
-
-
-// =====================
-// RATE BOX FUNCTION
-// =====================
-function drawRateBox(ctx,title,price,y){
-
-ctx.fillStyle = "rgba(184,134,11,0.9)";
-ctx.fillRect(400,y,1680,350);
-
-ctx.fillStyle="white";
-
-ctx.font="90px Arial";
-ctx.fillText(title,1240,y+120);
-
-ctx.font="bold 150px Arial";
-ctx.fillText("₹ " + price,1240,y+260);
-
-}
-
-
-   function roundRect(ctx,x,y,width,height,radius,fill,stroke){
-
-ctx.beginPath();
-ctx.moveTo(x+radius,y);
-ctx.lineTo(x+width-radius,y);
-ctx.quadraticCurveTo(x+width,y,x+width,y+radius);
-ctx.lineTo(x+width,y+height-radius);
-ctx.quadraticCurveTo(x+width,y+height,x+width-radius,y+height);
-ctx.lineTo(x+radius,y+height);
-ctx.quadraticCurveTo(x,y+height,x,y+height-radius);
-ctx.lineTo(x,y+radius);
-ctx.quadraticCurveTo(x,y,x+radius,y);
-ctx.closePath();
-
-if(fill) ctx.fill();
-if(stroke) ctx.stroke();
-
-}
- // =====================
-// RATES DRAW (UPDATED)
-// =====================
-function drawRates(ctx){
-
-ctx.textAlign="center";
-
-// 22K GOLD 1 GRAM
-ctx.font="bold 150px Arial";
-ctx.fillText("22K GOLD 1 GRAM",1240,1700);
-
-ctx.font="bold 170px Arial";
-ctx.fillText("₹ " + rate22k_1g,1240,1900);
-
-// 22K GOLD 1 PAVAN
-ctx.font="bold 150px Arial";
-ctx.fillText("22K GOLD 1 PAVAN",1240,2150);
-
-ctx.font="bold 170px Arial";
-ctx.fillText("₹ " + rate22k_1p,1240,2350);
-
-// 18K GOLD 1 GRAM
-ctx.font="bold 130px Arial";
-ctx.fillText("18K GOLD 1 GRAM",1240,2600);
-
-ctx.font="bold 150px Arial";
-ctx.fillText("₹ " + rate18k_1g,1240,2800);
-
-// SILVER
-ctx.font="bold 130px Arial";
-ctx.fillText("SILVER 1 GRAM",1240,3050);
-
-ctx.font="bold 150px Arial";
-ctx.fillText("₹ " + rateSilver_1g,1240,3250);
-
-}
-
-// =====================
-// FOOTER IMAGE
-// =====================
-function drawFooter(ctx, canvas, callback){
-
-if(!footerUrl){
-  callback(); // skip if no footer
-  return;
-}
-
-const footerImg = new Image();
-footerImg.crossOrigin = "anonymous";
-footerImg.src = footerUrl;
-
-footerImg.onload = function(){
-
-// 🔥 bottom footer position
-const footerHeight = 300;
-
-ctx.drawImage(
-  footerImg,
-  0,
-  canvas.height - footerHeight,
-  canvas.width,
-  footerHeight
-);
-
-callback(); // continue
-
-};
-
-footerImg.onerror = function(){
-callback();
-};
-
-}
- 
-  // =====================
- // =====================
-function save(canvas, share=false){
-
-const btn = document.getElementById("shareBtn");
-
-canvas.toBlob(async function(blob){
-
-try{
-
-const today = new Date();
-const fileName =
-  today.getDate() + "." +
-  (today.getMonth()+1) + "." +
-  today.getFullYear() + ".png";
-
-// ✅ TRY SHARE FIRST (no canShare check)
-if(share && navigator.share){
-
-const file = new File([blob], fileName, {type:"image/png"});
-
-try{
-
-await navigator.share({
-files:[file],
-title:"Today's Gold Rate"
-});
-
-return; // ✅ success → stop here
-
-}catch(e){
-// ❗ user cancel / not supported
-console.log("Share failed → fallback");
-}
-
-}
-
-// ✅ FALLBACK DOWNLOAD
-downloadFile(blob, fileName);
-
-resetBtn();
-
-}catch(err){
-
-downloadFile(blob, fileName);
-resetBtn();
-
-}
-
-}, "image/png");
-
-   
-function downloadFile(blob, fileName){
-
-const link = document.createElement("a");
-link.download = fileName;
-link.href = URL.createObjectURL(blob);
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-}
-
-
-}
-  function resetBtn(){
+function generatePoster(){
 
   const btn = document.getElementById("shareBtn");
 
+  if(backgrounds.length === 0){
+    alert("No backgrounds found");
+    resetBtn();
+    return;
+  }
+
+  let bgIndex;
+
+  do{
+    bgIndex = Math.floor(Math.random() * backgrounds.length);
+  }while(bgIndex === lastBg);
+
+  lastBg = bgIndex;
+
+  alert("Poster generated ✅ (next step ready)");
+
+  resetBtn();
+}
+
+// =====================
+// BUTTON FUNCTIONS
+// =====================
+function resetBtn(){
+  const btn = document.getElementById("shareBtn");
   btn.classList.remove("share-loading","share-disabled");
   btn.innerText = "Share";
   btn.style.pointerEvents = "auto";
-
 }
-// =====================
-// ✅ GLOBAL FUNCTION
+
 function disableShareBtn(text){
-
-const btn = document.getElementById("shareBtn");
-
-btn.innerText = text;
-btn.classList.remove("share-loading");
-btn.classList.add("share-disabled");
-
-btn.style.pointerEvents = "none";
-
+  const btn = document.getElementById("shareBtn");
+  btn.innerText = text;
+  btn.classList.add("share-disabled");
+  btn.style.pointerEvents = "none";
 }
 
-
-
+// =====================
+// EXTRA
+// =====================
 function logoutUser(){
   localStorage.removeItem("userPhone");
-  window.location.href = "login.html";
+  location.href = "login.html";
 }
 
 function openWhatsApp(){
