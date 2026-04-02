@@ -645,69 +645,14 @@ if(rateSnap.exists()){
   bg.src = backgrounds[lastBg];
 
   bg.onload = function(){
-
-  ctx.drawImage(bg,0,0,canvas.width,canvas.height); // 
-
-  template1(ctx, canvas); // 
-
-  save(canvas, true); // 
-}
-
- 
-
-
-
-
-   function generatePoster(){
-
-  lastBg = Math.floor(Math.random() * backgrounds.length); 
-
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = 1080;
-  canvas.height = 1350;
-
-  // BACKGROUND
-  const bg = new Image();
-  bg.crossOrigin = "anonymous";
-  bg.src = backgrounds[lastBg];
-
-  bg.onload = function(){
-
-    // ✅ ആദ്യം background draw
     ctx.drawImage(bg,0,0,canvas.width,canvas.height);
-
-    // ✅ പിന്നെ template draw
     template1(ctx, canvas);
-
-    // ✅ ഇനി image ready → save
-    canvas.toBlob(function(blob){
-
-      const fileName = "gold-rate.png";
-
-      if(navigator.share){
-        const file = new File([blob], fileName, {type:"image/png"});
-
-        navigator.share({
-          files:[file],
-          title:"Gold Rate"
-        }).catch(()=>{
-          downloadFile(blob,fileName);
-        });
-
-      }else{
-        downloadFile(blob,fileName);
-      }
-
-      resetBtn();
-
-    },"image/png");
-
+    save(canvas, true);
   };
 
-}
+} 
 
+ 
 
    function template1(ctx, canvas){
 
