@@ -447,6 +447,9 @@ let backgrounds = [];
 let lastBg = -1;
 let logoUrl = "";  
 let footerUrl = "";  
+ let products = ["22K Gold","18K Gold","Silver"];
+   let rateDate = ""; 
+   
 // =====================
 // FIREBASE
 // =====================
@@ -547,6 +550,7 @@ if(rateSnap.exists()){
     String(d.getDate()).padStart(2,'0') + "-" +
     String(d.getMonth()+1).padStart(2,'0') + "-" +
     d.getFullYear();
+  rateDate = formatted;   
 
   statusDate.innerText = formatted;
   statusTime.innerText = rawTime;
