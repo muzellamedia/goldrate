@@ -524,47 +524,43 @@ try{
   // =====================
   // LOAD RATES
   // =====================
-  const rateRef = doc(db,"settings","rates");
-  const rateSnap = await getDoc(rateRef);
+  const rateRef = doc(db,"rates","today");
+const rateSnap = await getDoc(rateRef);
 
-  if(rateSnap.exists()){
+if(rateSnap.exists()){
 
-    const rates = rateSnap.data();
+  const rates = rateSnap.data();
 
-    const statusHeader = document.getElementById("statusHeader");
-    const statusDate = document.getElementById("statusDate");
-    const statusTime = document.getElementById("statusTime");
+  const statusHeader = document.getElementById("statusHeader");
+  const statusDate = document.getElementById("statusDate");
+  const statusTime = document.getElementById("statusTime");
 
-    let rawDate = rates.date || "";
-    let rawTime = rates.time || "";
+  let rawDate = rates.date || "";
+  let rawTime = rates.time || "";
 
-    if(rawDate){
+  // FORMAT DATE
+  const d = new Date(rawDate);
+  const formatted =
+    String(d.getDate()).padStart(2,'0') + "-" +
+    String(d.getMonth()+1).padStart(2,'0') + "-" +
+    d.getFullYear();
 
-      const today = new Date().toISOString().slice(0,10);
-      const rateDateISO = new Date(rawDate).toISOString().slice(0,10);
+  statusDate.innerText = formatted;
+  statusTime.innerText = rawTime;
 
-      // DATE FORMAT
-      const d = new Date(rawDate);
-      const formatted =
-        String(d.getDate()).padStart(2,'0') + "-" +
-        String(d.getMonth()+1).padStart(2,'0') + "-" +
-        d.getFullYear();
+  const today = new Date().toISOString().slice(0,10);
+  const rateDateISO = new Date(rawDate).toISOString().slice(0,10);
 
-      statusDate.innerText = formatted;
-      statusTime.innerText = rawTime || "--";
-
-      if(rateDateISO === today){
-        statusHeader.innerText = "Gold Rate Updated";
-        statusHeader.style.background = "#0a6b3c";
-      }else{
-        statusHeader.innerText = "Gold Rate Not Updated";
-        statusHeader.style.background = "red";
-      }
-
-    }
-
+  if(rateDateISO === today){
+    statusHeader.innerText = "Gold Rate Updated";
+    statusHeader.style.background = "#0a6b3c";
+  }else{
+    statusHeader.innerText = "Gold Rate Not Updated";
+    statusHeader.style.background = "red";
   }
 
+}
+  }
 }catch(err){
   console.log(err);
 }
