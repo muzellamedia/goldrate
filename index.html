@@ -661,56 +661,59 @@ if(rateSnap.exists()){
 
  
 
-   function template1(ctx, canvas){
-
+   // =====================
+// TEMPLATE
 // =====================
-// LOGO
-// =====================
-if(logoUrl){
+function template1(ctx, canvas){
 
-const logo = new Image();
-logo.crossOrigin="anonymous";
-logo.src = logoUrl + "?t=" + new Date().getTime();
+  // =====================
+  // LOGO
+  // =====================
+  if(logoUrl){
 
-logo.onload = function(){
+    const logo = new Image();
+    logo.crossOrigin="anonymous";
+    logo.src = logoUrl + "?t=" + new Date().getTime();
 
-const maxWidth = 700;
-const maxHeight = 400;
+    logo.onload = function(){
 
-let w = logo.width;
-let h = logo.height;
+      const maxWidth = 700;
+      const maxHeight = 400;
 
-if(w > maxWidth){
-h = h * (maxWidth / w);
-w = maxWidth;
-}
+      let w = logo.width;
+      let h = logo.height;
 
-if(h > maxHeight){
-w = w * (maxHeight / h);
-h = maxHeight;
-}
+      if(w > maxWidth){
+        h = h * (maxWidth / w);
+        w = maxWidth;
+      }
 
-const x = 1700;
-const y = 120;
+      if(h > maxHeight){
+        w = w * (maxHeight / h);
+        h = maxHeight;
+      }
 
-// background
-ctx.fillStyle = "rgba(255,255,255,0.9)";
-roundRect(ctx,x-40,y-40,w+80,h+80,30,true,false);
+      const x = 1700;
+      const y = 120;
 
-// border
-ctx.strokeStyle = "white";
-ctx.lineWidth = 8;
-roundRect(ctx,x-40,y-40,w+80,h+80,30,false,true);
+      // background
+      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      roundRect(ctx,x-40,y-40,w+80,h+80,30,true,false);
 
-ctx.drawImage(logo,x,y,w,h);
+      // border
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 8;
+      roundRect(ctx,x-40,y-40,w+80,h+80,30,false,true);
 
-drawTemplate1(ctx,canvas);
+      ctx.drawImage(logo,x,y,w,h);
 
-};
+      drawTemplate1(ctx,canvas); // ✅ continue
 
-}else{
-drawTemplate1(ctx,canvas);
-}
+    };
+
+  }else{
+    drawTemplate1(ctx,canvas);
+  }
 
 }
 
@@ -720,77 +723,59 @@ drawTemplate1(ctx,canvas);
 // =====================
 function drawTemplate1(ctx,canvas){
 
-ctx.textAlign="center";
+  ctx.textAlign="center";
 
-// =====================
-// DATE BOX
-// =====================
-ctx.fillStyle="rgba(255,215,0,0.25)";
-roundRect(ctx,80,120,1050,200,30,true,false);
+  // =====================
+  // DATE BOX
+  // =====================
+  ctx.fillStyle="rgba(255,215,0,0.25)";
+  roundRect(ctx,80,120,1050,200,30,true,false);
 
-ctx.strokeStyle="white";
-ctx.lineWidth=8;
-roundRect(ctx,80,120,1050,200,30,false,true);
+  ctx.strokeStyle="white";
+  ctx.lineWidth=8;
+  roundRect(ctx,80,120,1050,200,30,false,true);
 
-ctx.textAlign="left";
-ctx.fillStyle="#FFFFFF";
+  ctx.textAlign="left";
+  ctx.fillStyle="#FFFFFF";
 
-ctx.font="bold 60px Arial";
-ctx.fillText("TODAY GOLD RATE",120,210);
+  ctx.font="bold 60px Arial";
+  ctx.fillText("TODAY GOLD RATE",120,210);
 
-ctx.font="bold 100px Arial";
-ctx.fillText(rateDate,120,300);
+  ctx.font="bold 100px Arial";
+  ctx.fillText(rateDate,120,300);
 
-ctx.textAlign="center";
+  ctx.textAlign="center";
 
-// =====================
-// DYNAMIC RATE BOXES
-// =====================
-let y = 1600;
+  // =====================
+  // RATES
+  // =====================
+  let y = 1600;
 
-// 👉 22K GOLD
-if(products.includes("22K Gold")){
+  if(products.includes("22K Gold")){
+    drawRateBox(ctx,"22K GOLD 1 GRAM",rate22k_1g,y);
+    y += 450;
 
-drawRateBox(ctx,
-"22K GOLD 1 GRAM",
-rate22k_1g,
-y
-);
+    drawRateBox(ctx,"22K GOLD 1 PAVAN",rate22k_1p,y);
+    y += 500;
+  }
 
-y += 450;
+  if(products.includes("18K Gold")){
+    drawRateBox(ctx,"18K GOLD 1 GRAM",rate18k_1g,y);
+    y += 500;
+  }
 
-drawRateBox(ctx,
-"22K GOLD 1 PAVAN",
-rate22k_1p,
-y
-);
+  if(products.includes("Silver")){
+    drawRateBox(ctx,"SILVER 1 GRAM",rateSilver_1g,y);
+  }
 
-y += 500;
-}
-
-// 👉 18K GOLD
-if(products.includes("18K Gold")){
-
-  drawRateBox(ctx,
-    "18K GOLD 1 GRAM",
-    rate18k_1g,
-    y
-  );
-
-  y += 500;
-}
-
-// 👉 SILVER
-if(products.includes("Silver")){
-
-drawRateBox(ctx,
-"SILVER 1 GRAM",
-rateSilver_1g,
-y
-);
+  // =====================
+  // FOOTER + SAVE
+  // =====================
+  drawFooter(ctx, canvas, function(){
+    save(canvas, true);
+  });
 
 }
-
 
    function save(canvas, share=false){
 
