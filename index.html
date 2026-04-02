@@ -646,6 +646,13 @@ if(rateSnap.exists()){
 
   bg.onload = function(){
 
+  ctx.drawImage(bg,0,0,canvas.width,canvas.height); // 
+
+  template1(ctx, canvas); // 
+
+  save(canvas, true); // 
+}
+
  
 
 
@@ -820,6 +827,31 @@ save(canvas);
 });
 
 }
+
+   function save(canvas, share=false){
+
+canvas.toBlob(async function(blob){
+
+const fileName = "gold-rate.png";
+
+if(share && navigator.share){
+
+const file = new File([blob], fileName, {type:"image/png"});
+
+try{
+await navigator.share({files:[file]});
+return;
+}catch(e){}
+
+}
+
+downloadFile(blob,fileName);
+resetBtn();
+
+},"image/png");
+
+}
+   
    function downloadFile(blob, fileName){
 
   const link = document.createElement("a");
