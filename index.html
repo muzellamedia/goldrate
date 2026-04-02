@@ -787,46 +787,6 @@ y
 
 }
 
-function drawFooter(ctx, canvas, callback){
-
-  if(!footerUrl){
-    callback();
-    return;
-  }
-
-  const footer = new Image();
-  footer.crossOrigin = "anonymous";
-  footer.src = footerUrl + "?t=" + new Date().getTime();
-
-  footer.onload = function(){
-
-    const maxWidth = canvas.width;
-    const maxHeight = 200;
-
-    let w = footer.width;
-    let h = footer.height;
-
-    // maintain ratio
-    if(w > maxWidth){
-      h = h * (maxWidth / w);
-      w = maxWidth;
-    }
-
-    if(h > maxHeight){
-      w = w * (maxHeight / h);
-      h = maxHeight;
-    }
-
-    const x = (canvas.width - w)/2;
-    const y = canvas.height - h - 40;
-
-    ctx.drawImage(footer, x, y, w, h);
-
-    callback(); // 👉 save after footer draw
-
-  };
-
-}
 
    function save(canvas, share=false){
 
@@ -879,6 +839,47 @@ function disableShareBtn(text){
   btn.innerText = text;
   btn.classList.add("share-disabled");
   btn.style.pointerEvents = "none";
+}
+
+  function drawFooter(ctx, canvas, callback){
+
+  if(!footerUrl){
+    callback();
+    return;
+  }
+
+  const footer = new Image();
+  footer.crossOrigin = "anonymous";
+  footer.src = footerUrl + "?t=" + new Date().getTime();
+
+  footer.onload = function(){
+
+    const maxWidth = canvas.width;
+    const maxHeight = 200;
+
+    let w = footer.width;
+    let h = footer.height;
+
+    // maintain ratio
+    if(w > maxWidth){
+      h = h * (maxWidth / w);
+      w = maxWidth;
+    }
+
+    if(h > maxHeight){
+      w = w * (maxHeight / h);
+      h = maxHeight;
+    }
+
+    const x = (canvas.width - w)/2;
+    const y = canvas.height - h - 40;
+
+    ctx.drawImage(footer, x, y, w, h);
+
+    callback(); // 👉 save after footer draw
+
+  };
+
 }
 
 // =====================
