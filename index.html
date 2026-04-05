@@ -5,7 +5,7 @@
 <title>Gold Rate Poster Service</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@700&display=swap" rel="stylesheet">
 <style>
 
 body{
@@ -662,24 +662,22 @@ lastBg = Math.floor(Math.random() * backgrounds.length);
 
   bg.onload = function(){
 
-    ctx.drawImage(bg,0,0,canvas.width,canvas.height);
+  ctx.drawImage(bg,0,0,canvas.width,canvas.height);
 
-    // ===== COMMON PART =====
-    drawHeader(ctx, canvas);
-    drawLogo(ctx, canvas);
+  drawHeader(ctx, canvas);
 
-    // 👉 TEMPLATE CALL (CHANGE HERE)
-    template1(ctx, canvas);  // 🔁 template2 മാറ്റാം
+  drawLogo(ctx, canvas, function(){   // 👈 callback add
 
+    template1(ctx, canvas);
     drawDiff(ctx, canvas);
 
     drawFooter(ctx, canvas, function(){
       save(canvas, true);
     });
 
-  };
+  });
 
-}
+};
  
 function drawHeader(ctx, canvas){
 
@@ -704,9 +702,12 @@ function drawHeader(ctx, canvas){
 
 }
 
-   function drawLogo(ctx, canvas){
+   function drawLogo(ctx, canvas, callback){
 
-  if(!logoUrl) return;
+  if(!logoUrl){
+    callback();
+    return;
+  }
 
   const logo = new Image();
   logo.crossOrigin="anonymous";
@@ -720,7 +721,6 @@ function drawHeader(ctx, canvas){
     let w = logo.width;
     let h = logo.height;
 
-    // maintain ratio
     if(w > maxWidth){
       h = h * (maxWidth / w);
       w = maxWidth;
@@ -732,12 +732,12 @@ function drawHeader(ctx, canvas){
     }
 
     const gap = 80;
-
     const x = canvas.width - w - gap;
     const y = gap;
 
     ctx.drawImage(logo, x, y, w, h);
 
+    callback(); // ✅ IMPORTANT
   };
 
 }
@@ -791,7 +791,7 @@ function template1(ctx, canvas){
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 40px Indulekha, Arial";
+  ctx.font = "bold 45px 'Noto Sans Malayalam', Arial";
   ctx.fillText(text,540,880);
 
 }
