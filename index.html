@@ -683,25 +683,24 @@ lastBg = Math.floor(Math.random() * backgrounds.length);
  
 function drawHeader(ctx, canvas){
 
+  // YELLOW TRANSPARENT BOX
   ctx.fillStyle="rgba(255,215,0,0.25)";
-roundRect(ctx,80,120,1050,200,30,true,false);
+  roundRect(ctx,80,120,1050,200,30,true,false);
 
-// WHITE BORDER
-ctx.strokeStyle="white";
-ctx.lineWidth=8;
-roundRect(ctx,80,120,1050,200,30,false,true);
+  // WHITE BORDER
+  ctx.strokeStyle="white";
+  ctx.lineWidth=8;
+  roundRect(ctx,80,120,1050,200,30,false,true);
 
+  // TITLE
+  ctx.textAlign="left";
+  ctx.fillStyle="#FFFFFF";
+  ctx.font="bold 60px Arial";
+  ctx.fillText("TODAY’S GOLD RATE",120,210);
 
-// TITLE
-ctx.textAlign="left";
-ctx.fillStyle="#FFFFFF";
-ctx.font="bold 60px Arial";
-ctx.fillText("TODAY’S GOLD RATE",120,210);
-
- // DATE
-ctx.fillStyle="#FFFFFF";
-ctx.font="bold 100px Arial";
-ctx.fillText(rateDate,120,300);
+  // DATE
+  ctx.font="bold 100px Arial";
+  ctx.fillText(rateDate,120,300);
 
 }
 
@@ -716,29 +715,29 @@ ctx.fillText(rateDate,120,300);
   logo.onload = function(){
 
     const maxWidth = 1200;
-const maxHeight = 1200;
+    const maxHeight = 1200;
 
-let w = logo.width;
-let h = logo.height;
+    let w = logo.width;
+    let h = logo.height;
 
-// maintain aspect ratio
-if(w > maxWidth){
-  h = h * (maxWidth / w);
-  w = maxWidth;
-}
+    // maintain ratio
+    if(w > maxWidth){
+      h = h * (maxWidth / w);
+      w = maxWidth;
+    }
 
-if(h > maxHeight){
-  w = w * (maxHeight / h);
-  h = maxHeight;
-}
+    if(h > maxHeight){
+      w = w * (maxHeight / h);
+      h = maxHeight;
+    }
 
-// equal gap from top and right
-const gap = 80;
+    const gap = 80;
 
-const x = canvas.width - w - gap;
-const y = gap;
+    const x = canvas.width - w - gap;
+    const y = gap;
 
-ctx.drawImage(logo, x, y, w, h);
+    ctx.drawImage(logo, x, y, w, h);
+
   };
 
 }
