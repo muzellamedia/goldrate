@@ -662,8 +662,7 @@ canvas.height = 3508;
 
   bg.onload = function(){
 
-  ctx.drawImage(bg,0,0,canvas.width,canvas.height);
-
+  ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
   drawHeader(ctx, canvas);
 
   drawLogo(ctx, canvas, function(){   // 👈 callback add
@@ -685,7 +684,10 @@ function drawHeader(ctx, canvas){
 
   // YELLOW TRANSPARENT BOX
   ctx.fillStyle="rgba(255,215,0,0.25)";
-  roundRect(ctx,80,120,1050,200,30,true,false);
+  const padding = 100;
+const boxWidth = canvas.width - (padding * 2);
+
+roundRect(ctx, padding, 120, boxWidth, 220, 30, true, false);
 
   // WHITE BORDER
   ctx.strokeStyle="white";
@@ -693,14 +695,15 @@ function drawHeader(ctx, canvas){
   roundRect(ctx,80,120,1050,200,30,false,true);
 
   // TITLE
-  ctx.textAlign="left";
+  ctx.textAlign="center";
+
   ctx.fillStyle="#FFFFFF";
   ctx.font="bold 60px Arial";
-  ctx.fillText("TODAY’S GOLD RATE",120,210);
+  ctx.fillText("TODAY’S GOLD RATE", canvas.width/2, 230);
 
   // DATE
   ctx.font="bold 100px Arial";
-  ctx.fillText(rateDate,250,500);
+  ctx.fillText(rateDate, canvas.width/2, 550);
 
 }
 
@@ -717,8 +720,8 @@ function drawHeader(ctx, canvas){
 
   logo.onload = function(){
 
-    const maxWidth = 1200;
-    const maxHeight = 1200;
+    const maxWidth = 600;
+const maxHeight = 600;
 
     let w = logo.width;
     let h = logo.height;
@@ -749,10 +752,13 @@ function drawHeader(ctx, canvas){
 function template1(ctx, canvas){
 
   let y = 500;
-
+const centerX = canvas.width / 2;
   // 1 Gram
   ctx.fillStyle = "#ff2e8b";
-  roundRect(ctx,320,y,440,140,20,true,false);
+  const boxWidth = canvas.width * 0.7;
+const x = (canvas.width - boxWidth) / 2;
+
+roundRect(ctx, x, y, boxWidth, 200, 20, true, false);
 
   ctx.fillStyle = "#FFD700";
   ctx.font = "bold 160px Indulekha, Arial";
@@ -774,7 +780,7 @@ function template1(ctx, canvas){
   ctx.fillText("1 Pavan",540,y+60);
 
   ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 200px Indulekha, Arial";
+  ctx.font = "bold 260px Indulekha, Arial";
   ctx.fillText("₹ " + rate22k_1p,540,y+140);
 
 }
@@ -794,7 +800,7 @@ function template1(ctx, canvas){
   ctx.textAlign = "center";
   ctx.fillStyle = "#FFFFFF";
   ctx.font = "bold 160px 'Noto Sans Malayalam', Arial";
-  ctx.fillText(text,540,880);
+  ctx.fillText(text, canvas.width/2, 1100);
 
 }
    
