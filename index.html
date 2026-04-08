@@ -451,6 +451,8 @@ let rate22k_1p = 0;
 let rate18k_1g = 0;
 let rateSilver_1g = 0;
    let diff = 0;
+const FOOTER_DRAW_WIDTH = 2484;
+const FOOTER_DRAW_HEIGHT = 659;
 
 function parseRateDate(rawDate){
   if(!rawDate) return null;
@@ -686,8 +688,8 @@ canvas.height = 3508;
 
   drawLogo(ctx, canvas, function(){   // 👈 callback add
 
-    template1(ctx, canvas);
-    drawDiff(ctx, canvas);
+    drawActiveTemplate(ctx, canvas);
+    drawCommonDiffAboveFooter(ctx, canvas);
 
     drawFooter(ctx, canvas, function(){
       save(canvas, true);
@@ -697,6 +699,11 @@ canvas.height = 3508;
 
   };
 
+}
+
+function drawActiveTemplate(ctx, canvas){
+  // Keep template selection centralized so common elements stay outside templates.
+  template1(ctx, canvas);
 }
  
 function drawHeader(ctx, canvas){
@@ -801,7 +808,7 @@ roundRect(ctx, x, y, boxWidth, 200, 20, true, false);
 
 }
 
-   function drawDiff(ctx, canvas){
+function drawCommonDiffAboveFooter(ctx, canvas){
 
   let text = "";
 
@@ -813,10 +820,20 @@ roundRect(ctx, x, y, boxWidth, 200, 20, true, false);
     text = "ഇന്ന് പവന് " + Math.abs(diff) + " രൂപ കുറഞ്ഞു";
   }
 
+  const y = canvas.height - FOOTER_DRAW_HEIGHT - 35;
+
   ctx.textAlign = "center";
   ctx.fillStyle = "#FFFFFF";
-  ctx.font = "bold 160px 'Noto Sans Malayalam', Arial";
-  ctx.fillText(text, canvas.width/2, 1100);
+  ctx.font = "bold 120px 'Noto Sans Malayalam', Arial";
+  ctx.shadowColor = "rgba(0,0,0,0.95)";
+  ctx.shadowBlur = 22;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 8;
+  ctx.fillText(text, canvas.width/2, y);
+  ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
 
 }
    
@@ -928,13 +945,10 @@ function resetBtn(){
 
   footer.onload = function(){
 
-    const footerWidth = 2484;
-    const footerHeight = 659;
+    const x = Math.floor((canvas.width - FOOTER_DRAW_WIDTH) / 2);
+    const y = canvas.height - FOOTER_DRAW_HEIGHT;
 
-    const x = Math.floor((canvas.width - footerWidth) / 2);
-    const y = canvas.height - footerHeight;
-
-    ctx.drawImage(footer, x, y, footerWidth, footerHeight);
+    ctx.drawImage(footer, x, y, FOOTER_DRAW_WIDTH, FOOTER_DRAW_HEIGHT);
 
     callback();
   };
