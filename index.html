@@ -928,13 +928,13 @@ function resetBtn(){
 
   footer.onload = function(){
 
-    const footerHeight = 250; // 🔥 height control (change if needed)
+    const footerWidth = 2484;
+    const footerHeight = 659;
 
-    const x = 0;
+    const x = Math.floor((canvas.width - footerWidth) / 2);
     const y = canvas.height - footerHeight;
 
-    // 👉 full width draw
-    ctx.drawImage(footer, x, y, canvas.width, footerHeight);
+    ctx.drawImage(footer, x, y, footerWidth, footerHeight);
 
     callback();
   };
