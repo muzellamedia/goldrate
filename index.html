@@ -453,6 +453,9 @@ let rateSilver_1g = 0;
    let diff = 0;
 const FOOTER_DRAW_WIDTH = 2484;
 const FOOTER_DRAW_HEIGHT = 659;
+const OPTIONAL_RATE_BOX_WIDTH = 690;
+const OPTIONAL_RATE_BOX_HEIGHT = 300;
+const OPTIONAL_RATE_BOX_GAP_FROM_FOOTER = 80;
 
 function parseRateDate(rawDate){
   if(!rawDate) return null;
@@ -469,6 +472,25 @@ function parseRateDate(rawDate){
 
   const d = new Date(rawDate);
   return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function normalizeProducts(rawProducts){
+  if(!Array.isArray(rawProducts)) return products;
+  const clean = rawProducts
+    .map((item) => String(item || "").trim())
+    .filter(Boolean);
+  return clean.length ? clean : products;
+}
+
+function hasProduct(keyword){
+  const key = String(keyword || "").toLowerCase();
+  return products.some((item) => String(item || "").toLowerCase().includes(key));
+}
+
+function formatRateValue(value){
+  const n = Number(value || 0);
+  if(Number.isNaN(n)) return "0";
+  return n.toLocaleString("en-IN");
 }
    
 // =====================
@@ -505,6 +527,7 @@ try{
     const user = userSnap.data();
     logoUrl = user.logoURL || ""; 
     footerUrl = user.footerURL || "";  
+    products = normalizeProducts(user.products || user.productList || user.selectedProducts);
 
     // SHOP DETAILS
     document.getElementById("shopName").innerText = user.shop || "";
@@ -630,6 +653,7 @@ rateSilver_1g = rates.silver_1g || 0;
       }
 
       const userData = userSnap.data();
+      products = normalizeProducts(userData.products || userData.productList || userData.selectedProducts);
 
       // BACKGROUND LOAD
       const bgRef = doc(db,"settings","backgrounds");
@@ -689,7 +713,8 @@ canvas.height = 3508;
   drawLogo(ctx, canvas, function(){   // 👈 callback add
 
     drawActiveTemplate(ctx, canvas);
-    drawCommonDiffAboveFooter(ctx, canvas);
+    const optionalRateTopY = drawOptionalBottomRates(ctx, canvas);
+    drawCommonDiffAboveFooter(ctx, canvas, optionalRateTopY);
 
     drawFooter(ctx, canvas, function(){
       save(canvas, true);
@@ -820,7 +845,7 @@ function drawCommonDiffAboveFooter(ctx, canvas){
     text = "ഇന്ന് പവന് " + Math.abs(diff) + " രൂപ കുറഞ്ഞു";
   }
 
-  const y = canvas.height - FOOTER_DRAW_HEIGHT - 35;
+  const y = canvas.height - FOOTER_DRAW_HEIGHT - 70;
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#FFFFFF";
