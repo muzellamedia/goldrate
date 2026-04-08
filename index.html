@@ -453,7 +453,7 @@ let rateSilver_1g = 0;
    let diff = 0;
 const FOOTER_DRAW_WIDTH = 2484;
 const FOOTER_DRAW_HEIGHT = 659;
-const OPTIONAL_RATE_BOX_WIDTH = 690;
+const OPTIONAL_RATE_BOX_WIDTH = 680;
 const OPTIONAL_RATE_BOX_HEIGHT = 300;
 const OPTIONAL_RATE_BOX_GAP_FROM_FOOTER = 80;
 
@@ -852,6 +852,7 @@ function drawOptionalBottomRates(ctx, canvas){
 
   if(hasProduct("18k")){
     items.push({
+      kind: "18k",
       title: "1 Gram 18K",
       value: formatRateValue(rate18k_1g)
     });
@@ -859,6 +860,7 @@ function drawOptionalBottomRates(ctx, canvas){
 
   if(hasProduct("silver")){
     items.push({
+      kind: "silver",
       title: "1 Gram Silver",
       value: formatRateValue(rateSilver_1g)
     });
@@ -874,13 +876,13 @@ function drawOptionalBottomRates(ctx, canvas){
   let gap = 0;
 
   if(items.length === 2){
-    startX = 120;
+    startX = 110;
     gap = canvas.width - (startX * 2) - (OPTIONAL_RATE_BOX_WIDTH * 2);
   }
 
   for(let i = 0; i < items.length; i++){
     const boxX = startX + (i * (OPTIONAL_RATE_BOX_WIDTH + gap));
-    drawBottomRateCard(ctx, boxX, y, items[i].title, items[i].value);
+    drawBottomRateCard(ctx, boxX, y, items[i].title, items[i].value, items[i].kind);
   }
 
   return y;
@@ -891,33 +893,37 @@ function drawOptionalBottoomRates(ctx, canvas){
   return drawOptionalBottomRates(ctx, canvas);
 }
 
-function drawBottomRateCard(ctx, x, y, title, value){
+function drawBottomRateCard(ctx, x, y, title, value, kind){
   const w = OPTIONAL_RATE_BOX_WIDTH;
   const h = OPTIONAL_RATE_BOX_HEIGHT;
   const splitY = y + 145;
+  const isSilver = kind === "silver";
+  const cardBg = isSilver ? "#9d0000" : "#2f5b3b";
+  const labelColor = "#ffffff";
+  const valueColor = "#f6ff1a";
 
-  ctx.fillStyle = "rgba(245,245,245,0.95)";
+  ctx.fillStyle = cardBg;
   ctx.fillRect(x, y, w, h);
 
-  ctx.strokeStyle = "#1a1a1a";
-  ctx.lineWidth = 5;
+  ctx.strokeStyle = "#111111";
+  ctx.lineWidth = 4;
   ctx.strokeRect(x, y, w, h);
 
   ctx.beginPath();
   ctx.moveTo(x, splitY);
   ctx.lineTo(x + w, splitY);
-  ctx.strokeStyle = "#1a1a1a";
-  ctx.lineWidth = 4;
+  ctx.strokeStyle = "rgba(255,255,255,0.2)";
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   ctx.textAlign = "center";
-  ctx.fillStyle = "#5a2b2b";
-  ctx.font = "bold 58px Arial";
-  ctx.fillText(title, x + (w / 2), y + 95);
+  ctx.fillStyle = labelColor;
+  ctx.font = "bold 68px Arial";
+  ctx.fillText(title, x + (w / 2), y + 98);
 
-  ctx.fillStyle = "#043c3c";
-  ctx.font = "bold 76px Arial";
-  ctx.fillText("\u20B9 " + value, x + (w / 2), y + 245);
+  ctx.fillStyle = valueColor;
+  ctx.font = "bold 86px Arial";
+  ctx.fillText("\u20B9 " + value, x + (w / 2), y + 258);
 }
 
 function drawCommonDiffAboveFooter(ctx, canvas, optionalRateTopY){
