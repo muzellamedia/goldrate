@@ -457,8 +457,8 @@ let shareCount = 0;
 const SHARE_LIMIT = 2;
 const FOOTER_DRAW_WIDTH = 2484;
 const FOOTER_DRAW_HEIGHT = 659;
-const OPTIONAL_RATE_BOX_WIDTH = 680;
-const OPTIONAL_RATE_BOX_HEIGHT = 300;
+const OPTIONAL_RATE_BOX_WIDTH = 1080;
+const OPTIONAL_RATE_BOX_HEIGHT = 145;
 const OPTIONAL_RATE_BOX_GAP_FROM_FOOTER = 80;
 
 function parseRateDate(rawDate){
@@ -1186,34 +1186,23 @@ function drawOptionalBottoomRates(ctx, canvas){
 function drawBottomRateCard(ctx, x, y, title, value, kind){
   const w = OPTIONAL_RATE_BOX_WIDTH;
   const h = OPTIONAL_RATE_BOX_HEIGHT;
-  const splitY = y + 145;
-  const isSilver = kind === "silver";
-  const cardBg = isSilver ? "#9d0000" : "#2f5b3b";
-  const labelColor = "#ffffff";
-  const valueColor = "#f6ff1a";
+  const label = kind === "silver" ? "Silver gram :" : "18K 1gram:";
 
-  ctx.fillStyle = cardBg;
+  ctx.fillStyle = "#9d0000";
   ctx.fillRect(x, y, w, h);
 
   ctx.strokeStyle = "#111111";
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 3;
   ctx.strokeRect(x, y, w, h);
 
-  ctx.beginPath();
-  ctx.moveTo(x, splitY);
-  ctx.lineTo(x + w, splitY);
-  ctx.strokeStyle = "rgba(255,255,255,0.2)";
-  ctx.lineWidth = 3;
-  ctx.stroke();
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 64px Arial";
+  ctx.fillText(label, x + 24, y + 98);
 
-  ctx.textAlign = "center";
-  ctx.fillStyle = labelColor;
-  ctx.font = "bold 68px Arial";
-  ctx.fillText(title, x + (w / 2), y + 98);
-
-  ctx.fillStyle = valueColor;
-  ctx.font = "bold 86px Arial";
-  ctx.fillText("\u20B9 " + value, x + (w / 2), y + 258);
+  ctx.fillStyle = "#f6ff1a";
+  ctx.font = "bold 82px Arial";
+  ctx.fillText("\u20B9 " + value, x + 500, y + 104);
 }
 
 function drawCommonDiffAboveFooter(ctx, canvas, optionalRateTopY){
@@ -1228,7 +1217,7 @@ function drawCommonDiffAboveFooter(ctx, canvas, optionalRateTopY){
     text = "ഇന്ന് പവന് " + Math.abs(diff) + " രൂപ കുറഞ്ഞു";
   }
 
-  const y = (optionalRateTopY || (canvas.height - FOOTER_DRAW_HEIGHT)) - 70;
+  const y = (optionalRateTopY || (canvas.height - FOOTER_DRAW_HEIGHT)) - 110;
 
   ctx.textAlign = "center";
   ctx.fillStyle = "#FFFFFF";
