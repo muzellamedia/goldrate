@@ -20,6 +20,89 @@ padding:25px;
 .container{
 max-width:750px;
 margin:auto;
+display:none;
+}
+
+.lock-screen{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#fff;
+margin:-25px;
+padding:25px;
+color:#f5372e;
+}
+
+.keypad-wrap{
+width:min(620px,100%);
+}
+
+.pin-view{
+height:48px;
+margin-bottom:24px;
+text-align:center;
+font-size:30px;
+letter-spacing:10px;
+color:#111;
+}
+
+.keypad-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:26px;
+}
+
+.keypad-key{
+min-height:120px;
+border:none;
+background:#fff;
+color:#f5372e;
+font-size:112px;
+font-weight:900;
+line-height:1;
+text-shadow:-2px -2px 0 #fff,2px 2px 0 #cfd4d8;
+cursor:pointer;
+}
+
+.keypad-tool{
+min-height:54px;
+border:1px solid #ddd;
+border-radius:8px;
+background:#f7f7f7;
+color:#111;
+font-size:16px;
+cursor:pointer;
+}
+
+.number-pad{
+display:none;
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+z-index:20;
+padding:14px;
+background:#fff;
+border-top:1px solid #ddd;
+box-shadow:0 -8px 24px rgba(0,0,0,.25);
+}
+
+.number-pad.active{
+display:block;
+}
+
+.number-pad .keypad-grid{
+width:min(520px,100%);
+margin:auto;
+gap:10px;
+}
+
+.number-pad .keypad-key{
+min-height:72px;
+font-size:52px;
+border:1px solid #eee;
+border-radius:8px;
 }
 
 .card{
@@ -33,6 +116,19 @@ h2{
 text-align:center;
 margin-bottom:25px;
 color:#333;
+}
+
+.topbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-bottom:25px;
+}
+
+.topbar h2{
+margin-bottom:0;
+text-align:left;
 }
 
 .row{
@@ -144,6 +240,24 @@ color:red;
 }
 
 @media(max-width:600px){
+body{
+padding:12px;
+}
+
+.lock-screen{
+margin:-12px;
+padding:12px;
+}
+
+.keypad-grid{
+gap:16px;
+}
+
+.keypad-key{
+min-height:92px;
+font-size:82px;
+}
+
 .row{
 flex-direction:column;
 align-items:flex-start;
@@ -164,13 +278,36 @@ flex-wrap:wrap;
 </style>
 </head>
 <body>
+<section class="lock-screen" id="lockScreen">
+<div class="keypad-wrap">
+<div class="pin-view" id="pinView"></div>
+<div class="keypad-grid">
+<button class="keypad-key" type="button" data-lock-key="1">1</button>
+<button class="keypad-key" type="button" data-lock-key="2">2</button>
+<button class="keypad-key" type="button" data-lock-key="3">3</button>
+<button class="keypad-key" type="button" data-lock-key="4">4</button>
+<button class="keypad-key" type="button" data-lock-key="5">5</button>
+<button class="keypad-key" type="button" data-lock-key="6">6</button>
+<button class="keypad-key" type="button" data-lock-key="7">7</button>
+<button class="keypad-key" type="button" data-lock-key="8">8</button>
+<button class="keypad-key" type="button" data-lock-key="9">9</button>
+<button class="keypad-tool" type="button" data-lock-back>Back</button>
+<button class="keypad-key" type="button" data-lock-key="0">0</button>
+<button class="keypad-tool" type="button" data-lock-clear>Clear</button>
+</div>
+</div>
+</section>
+
 <div class="container">
 <div class="card">
+<div class="topbar">
 <h2>KGSMA Gold Rate Admin</h2>
+<button id="editBtn">Edit</button>
+</div>
 
 <div class="row">
 <label>22K 1 Gram</label>
-<input type="number" id="gold22_1g" disabled>
+<input type="text" inputmode="numeric" pattern="[0-9]*" id="gold22_1g" disabled>
 </div>
 
 <div class="buttons">
@@ -179,22 +316,22 @@ flex-wrap:wrap;
 
 <div class="row">
 <label>22K 1 Pavan</label>
-<input type="number" id="gold22_1p" class="readonly" readonly>
+<input type="text" inputmode="numeric" pattern="[0-9]*" id="gold22_1p" class="readonly" readonly>
 </div>
 
 <div class="row">
 <label>18K 1 Gram</label>
-<input type="number" id="gold18_1g" disabled>
+<input type="text" inputmode="numeric" pattern="[0-9]*" id="gold18_1g" disabled>
 </div>
 
 <div class="row">
 <label>Silver 1 Gram</label>
-<input type="number" id="silver_1g" disabled>
+<input type="text" inputmode="numeric" pattern="[0-9]*" id="silver_1g" disabled>
 </div>
 
 <div class="row">
 <label>KGSMA</label>
-<input type="number" id="kgsma" disabled>
+<input type="text" inputmode="numeric" pattern="[0-9]*" id="kgsma" disabled>
 </div>
 
 <div class="row">
@@ -213,7 +350,6 @@ flex-wrap:wrap;
 </div>
 
 <div class="buttons">
-<button id="editBtn">Edit</button>
 <button id="updateBtn">Update</button>
 <button id="cancelBtn">Cancel</button>
 </div>
@@ -236,6 +372,23 @@ flex-wrap:wrap;
 <p>Difference : <span id="pDiff"></span></p>
 </div>
 </div>
+
+<section class="number-pad" id="numberPad">
+<div class="keypad-grid">
+<button class="keypad-key" type="button" data-input-key="1">1</button>
+<button class="keypad-key" type="button" data-input-key="2">2</button>
+<button class="keypad-key" type="button" data-input-key="3">3</button>
+<button class="keypad-key" type="button" data-input-key="4">4</button>
+<button class="keypad-key" type="button" data-input-key="5">5</button>
+<button class="keypad-key" type="button" data-input-key="6">6</button>
+<button class="keypad-key" type="button" data-input-key="7">7</button>
+<button class="keypad-key" type="button" data-input-key="8">8</button>
+<button class="keypad-key" type="button" data-input-key="9">9</button>
+<button class="keypad-tool" type="button" data-input-back>Back</button>
+<button class="keypad-key" type="button" data-input-key="0">0</button>
+<button class="keypad-tool" type="button" data-input-done>Done</button>
+</div>
+</section>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -261,6 +414,9 @@ const ref = doc(db,"rates","kgsma");
 const GRAMS_PER_PAVAN = 8;
 
 let oldData = {};
+let pinValue = "";
+let activeInput = null;
+const adminPin = "1994";
 
 const editable = [
 gold22_1g,
@@ -268,6 +424,82 @@ gold18_1g,
 silver_1g,
 kgsma
 ];
+
+function digitsOnly(value){
+return String(value || "").replace(/\D/g,"");
+}
+
+function renderPin(){
+pinView.textContent = "•".repeat(pinValue.length);
+}
+
+function unlockPage(){
+lockScreen.style.display = "none";
+document.querySelector(".container").style.display = "block";
+}
+
+function handlePinDigit(digit){
+if(pinValue.length >= adminPin.length){
+pinValue = "";
+}
+
+pinValue += digit;
+renderPin();
+
+if(pinValue === adminPin){
+unlockPage();
+return;
+}
+
+if(pinValue.length === adminPin.length){
+setTimeout(()=>{
+pinValue = "";
+renderPin();
+},250);
+}
+}
+
+function showNumberPad(){
+numberPad.classList.add("active");
+if(!activeInput){
+activeInput = gold22_1g;
+activeInput.focus();
+}
+}
+
+function hideNumberPad(){
+numberPad.classList.remove("active");
+}
+
+function clearEditableFields(){
+editable.forEach((box)=>{
+box.value = "";
+});
+
+gold22_1p.value = "";
+date.value = "";
+time.value = "";
+diff.value = "";
+preview();
+}
+
+function appendDigit(digit){
+if(!activeInput){
+activeInput = gold22_1g;
+}
+
+activeInput.value = digitsOnly(activeInput.value + digit);
+activeInput.dispatchEvent(new Event("input"));
+}
+
+function backspaceDigit(){
+if(!activeInput){
+activeInput = gold22_1g;
+}
+
+activeInput.value = activeInput.value.slice(0,-1);
+activeInput.dispatchEvent(new Event("input"));
+}
 
 function preview(){
 pDate.textContent = date.value;
@@ -289,6 +521,12 @@ calculateBtn.disabled = !isEditing;
 editBtn.style.display = isEditing ? "none" : "inline-block";
 updateBtn.style.display = isEditing ? "inline-block" : "none";
 cancelBtn.style.display = isEditing ? "inline-block" : "none";
+
+if(isEditing){
+showNumberPad();
+}else{
+hideNumberPad();
+}
 }
 
 function todayDate(){
@@ -434,7 +672,17 @@ loading.style.display = "none";
 }
 
 editable.forEach((box)=>{
-box.addEventListener("input",preview);
+box.addEventListener("input",()=>{
+box.value = digitsOnly(box.value);
+preview();
+});
+
+box.addEventListener("focus",()=>{
+activeInput = box;
+if(!box.disabled){
+showNumberPad();
+}
+});
 });
 
 gold22_1g.addEventListener("input",()=>{
@@ -448,6 +696,7 @@ fillCalculatedValues();
 };
 
 editBtn.onclick = () => {
+clearEditableFields();
 setEditMode(true);
 success.style.display = "none";
 error.style.display = "none";
@@ -514,6 +763,32 @@ loading.style.display = "none";
 
 setEditMode(false);
 loadData();
+
+document.querySelectorAll("[data-lock-key]").forEach((button)=>{
+button.addEventListener("click",()=>{
+handlePinDigit(button.dataset.lockKey);
+});
+});
+
+document.querySelector("[data-lock-back]").addEventListener("click",()=>{
+pinValue = pinValue.slice(0,-1);
+renderPin();
+});
+
+document.querySelector("[data-lock-clear]").addEventListener("click",()=>{
+pinValue = "";
+renderPin();
+});
+
+document.querySelectorAll("[data-input-key]").forEach((button)=>{
+button.addEventListener("click",()=>{
+appendDigit(button.dataset.inputKey);
+});
+});
+
+document.querySelector("[data-input-back]").addEventListener("click",backspaceDigit);
+document.querySelector("[data-input-done]").addEventListener("click",hideNumberPad);
+renderPin();
 </script>
 </body>
 </html>
